@@ -8,6 +8,8 @@ var Game = function(size) {
 	this.status = 'OPEN';
 	this.players = [];
 	this.state = {};
+	this.turn = {};
+	this.history = [];
 
 	openGames.push(this);
 
@@ -28,7 +30,6 @@ var Game = function(size) {
 
 		this.presidentIndex = 0;
 		this.specialPresident = null;
-		this.chancellor = null;
 
 		this.emit('lobby game', this);
 	}
@@ -40,7 +41,7 @@ var Game = function(size) {
 	}
 
 	this.advance = function() {
-		this.chancellor = null;
+		this.turn = {};
 		if (this.specialPresident) {
 			this.specialPresident = null;
 		} else {
