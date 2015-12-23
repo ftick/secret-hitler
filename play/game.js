@@ -47,7 +47,7 @@ var Game = function(size) {
 			this.specialPresident = null;
 		} else {
 			++this.presidentIndex;
-			if (this.presidentIndex > this.size) {
+			if (this.presidentIndex >= this.size) {
 				this.presidentIndex = 0;
 			}
 		}
@@ -65,7 +65,6 @@ var Game = function(size) {
 		var gamePlayer = this.getPlayerSocket(socket);
 		if (gamePlayer) {
 			gamePlayer.disconnected = false;
-
 			// player.emitOthers('lobby game', this);
 		} else {
 			player.index = this.players.length;

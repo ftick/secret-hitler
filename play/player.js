@@ -28,7 +28,6 @@ var Player = function(socket, uid, name) {
 	}
 
 	this.notData = function(data) {
-		console.log('notData', this.uid, data.uid);
 		return this.uid != data.uid;
 	}
 

@@ -7,12 +7,10 @@ var joinLobbyRoom = function(socket) {
 	var joiningGame;
 	var player = socket.player;
 	var previousGameId = player.game ? player.game.gid : null;
-	console.log('Joining', player.uid, previousGameId);
 	var openGames = Game.openGames;
 	for (var gidx in openGames) {
 		var game = openGames[gidx];
 		var openGame = game.canJoin();
-		console.log('cj', openGame);
 		if (game.gid == previousGameId) {
 			if (!openGame) {
 				openGame = game.inGame(socket);
@@ -30,8 +28,6 @@ var joinLobbyRoom = function(socket) {
 		joiningGame = new Game(3);
 	}
 	joiningGame.addPlayer(socket);
-
-	console.log(openGames.length);
 
 	return joiningGame;
 }
