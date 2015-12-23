@@ -1,4 +1,3 @@
-
 var chatAction = function(data, player) {
 	console.log('chat', data)
 	data.uid = player.uid;
@@ -71,9 +70,7 @@ var policyAction = function(data, player, game) {
 	} else if (player.uid == game.turn.chancellor) {
 		if (game.turn.presidentDiscard) {
 			data = player.emitAction('enacted', data);
-
-			game.advanceTurn();
-
+			game.enact(data.policy);
 			return data;
 		}
 	} else {

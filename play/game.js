@@ -1,5 +1,12 @@
 var Utils = require.main.require('./tools/utils');
 
+var LIBERAL = 'liberal';
+var FASCIST = 'fascist';
+var NONE = 'none';
+
+var FASCIST_POLICIES_REQUIRED = 6;
+var LIBERAL_POLICIES_REQUIRED = 5;
+
 var openGames = [];
 
 var Game = function(size) {
@@ -10,6 +17,9 @@ var Game = function(size) {
 	this.state = {};
 	this.turn = {};
 	this.history = [];
+	this.liberalEnacted = 0;
+	this.fascistEnacted = 0;
+	this.playerCount;
 
 	openGames.push(this);
 
@@ -28,11 +38,32 @@ var Game = function(size) {
 	this.start = function(socket) {
 		this.status = 'PLAYING';
 		this.started = true;
+		this.playerCount = this.players.length;
 
 		this.presidentIndex = 0;
 		this.specialPresident = null;
 
 		this.emit('lobby game', this);
+	}
+
+	this.getFascistPower = function() {
+		var enacted = this.fascistEnacted;
+		if (enacted == 1) {
+			return 'peek'; //SAMPLE
+			// return this.playerCount >= 9 ? 'investigate' : null;
+		}
+		if (enacted == 2) {
+			return this.playerCount >= 7 ? 'investigate' : null;
+		}
+		if (enacted == 3) {
+			return this.playerCount >= 7 ? 'election' : 'peek';
+		}
+		if (enacted == 4 || enacted == 5) {
+			return 'bullet';
+		}
+		if (enacted == 6) {
+			return 'win';
+		}
 	}
 
 //STATE
@@ -47,11 +78,38 @@ var Game = function(size) {
 			this.specialPresident = null;
 		} else {
 			++this.presidentIndex;
-			if (this.presidentIndex >= this.size) {
+			if (this.presidentIndex >= this.playerCount) {
 				this.presidentIndex = 0;
 			}
 		}
-		this.emit('turn completed');
+	}
+
+	this.finish = function() {
+		console.log('FIN', this.gid);
+		this.status = 'FIN';
+		//TODO save
+	}
+
+	this.enact = function(policy) {
+		if (policy == LIBERAL) {
+			++this.liberalEnacted;
+			if (this.liberalEnacted >= LIBERAL_POLICIES_REQUIRED) {
+				this.finish()
+				return;
+			}
+			this.power = null;
+		} else {
+			++this.fascistEnacted;
+			if (this.fascistEnacted >= FASCIST_POLICIES_REQUIRED) {
+				this.finish()
+				return;
+			}
+			this.power = this.getFascistPower();
+			console.log('enact power:', this.power);
+		}
+		if (!this.power) {
+			this.advanceTurn();
+		}
 	}
 
 //PLAYERS
@@ -103,7 +161,7 @@ var Game = function(size) {
 					});
 				}
 			}
-			if (this.playerCount() <= 0) {
+			if (this.players.length <= 0) {
 				this.removeSelf()
 				return
 			}
@@ -140,11 +198,7 @@ var Game = function(size) {
 	}
 
 	this.isFull = function() {
-		return this.playerCount() >= this.size;
-	}
-
-	this.playerCount = function() {
-		return this.players.length;
+		return this.players.length >= this.size;
 	}
 
 	this.activeCount = function() {
