@@ -24,7 +24,6 @@ var Player = function(socket, uid, name) {
 	}
 
 	this.isPresident = function() {
-		console.log('isPresident', this.index, this.game.president());
 		return this.index == this.game.president();
 	}
 

@@ -61,18 +61,23 @@ var voteAction = function(data, player, game) {
 	}
 }
 
-var discardAction = function(data, player, game) {
+var policyAction = function(data, player, game) {
 	if (player.isPresident()) {
 		if (!game.turn.presidentDiscard) {
-			game.turn.presidentDiscard = data.discard;
+			game.turn.presidentDiscard = data.policy;
+			data = player.emitAction('discarded', data);
+			return data;
 		}
-	} else if (uid == game.turn.chancellor) {
-		if (game.turn.presidentDiscard && !game.turn.chancellorDiscard) {
-			game.turn.chancellorDiscard = data.discard;
+	} else if (player.uid == game.turn.chancellor) {
+		if (game.turn.presidentDiscard) {
+			data = player.emitAction('enacted', data);
 
+			game.advanceTurn();
+
+			return data;
 		}
 	} else {
-		console.log('Invalid discard', uid, data);
+		console.log('Invalid policy action', player.uid, data);
 	}
 }
 
@@ -90,8 +95,8 @@ module.exports = function(socket) {
 			recording = choosePlayerAction(data, player, game);
 		} else if (action == 'vote') {
 			recording = voteAction(data, player, game);
-		} else if (action == 'discard policy') {
-			recording = discardAction(data, player, game);
+		} else if (action == 'policy') {
+			recording = policyAction(data, player, game);
 		}
 		if (recording) {
 			var historyIndex = game.history.length;
