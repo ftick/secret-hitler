@@ -7,6 +7,7 @@ var Game = function(size) {
 	this.size = size;
 	this.status = 'OPEN';
 	this.players = [];
+	this.state = {};
 
 	openGames.push(this);
 
@@ -16,34 +17,60 @@ var Game = function(size) {
 		io.to(this.gid).emit(name, data);
 	}
 
-	this.emitExcept = function(socket, name, data) {
-		socket.broadcast.to(this.gid).emit(name, data);
+	this.emitAction = function(name, data) {
+		data.action = name;
+		this.emit('game action', data);
 	}
 
 	this.start = function(socket) {
 		this.status = 'PLAYING';
 		this.started = true;
-		this.emit('lobby start', this);
+
+		this.presidentIndex = 0;
+		this.specialPresident = null;
+		this.chancellor = null;
+
+		this.emit('lobby game', this);
+	}
+
+//STATE
+
+	this.president = function() {
+		return this.specialPresident || this.presidentIndex;
+	}
+
+	this.advance = function() {
+		this.chancellor = null;
+		if (this.specialPresident) {
+			this.specialPresident = null;
+		} else {
+			this.presidentIndex += 1;
+		}
+		this.emit('turn completed');
 	}
 
 //PLAYERS
 
 	this.addPlayer = function(socket) {
 		socket.join(this.gid);
-		socket.player.game = this;
 
-		var player = this.getPlayerSocket(socket);
-		if (player) {
-			player.disconnected = false;
+		var player = socket.player;
+		player.game = this;
+
+		var gamePlayer = this.getPlayerSocket(socket);
+		if (gamePlayer) {
+			gamePlayer.disconnected = false;
+
+			// player.emitOthers('lobby game', this);
 		} else {
-			var player = socket.player;
+			player.index = this.players.length;
 			this.players.push({uid: player.uid, name: player.name});
 
-		}
-		if (this.isFull()) {
-			this.start();
-		} else {
-			this.emitExcept(socket, 'lobby game', this);
+			if (this.isFull()) {
+				this.start();
+			} else {
+				player.emitOthers('lobby game', this);
+			}
 		}
 	}
 

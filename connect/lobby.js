@@ -27,7 +27,7 @@ var joinLobbyRoom = function(socket) {
 	}
 
 	if (!joiningGame) {
-		joiningGame = new Game(2);
+		joiningGame = new Game(3);
 	}
 	joiningGame.addPlayer(socket);
 

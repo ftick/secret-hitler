@@ -2,18 +2,16 @@ var Utils = require.main.require('./tools/utils');
 var DB = require.main.require('./tools/db');
 
 var Lobby = require('./lobby');
-
-var players = {};
+var Player = require.main.require('./play/player');
 
 var authenticate = function(socket, uid, auth) {
 	DB.fetch('name, email', 'users', 'id = $1 AND auth_key = $2', [uid, auth], function(response) {
 		if (response) {
 			DB.query('UPDATE users SET online_at = '+Utils.seconds()+', online_count = online_count + 1 WHERE id = '+uid, null);
 			socket.authed = true;
-			var player = players[uid];
+			var player = Player.allPlayers[uid];
 			if (!player) {
-				player = {name: response.name, uid: uid};
-				players[uid] = player;
+				player = new Player(socket, uid, response.name);
 			}
 			socket.player = player;
 			socket.emit('auth', response);
