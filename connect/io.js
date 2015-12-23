@@ -19,7 +19,6 @@ io.on('connection', function(socket) {
 		var player = socket.player;
 		if (player) {
 			var game = player.game;
-			console.log('DC', uid, game ? game.playerCount() : null);
 			if (game) {
 				game.removePlayer(socket);
 			}

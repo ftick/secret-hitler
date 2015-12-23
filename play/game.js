@@ -21,6 +21,10 @@ var Game = function(size) {
 	this.fascistEnacted = 0;
 	this.playerCount;
 
+	this.positionIndex = 0;
+	this.specialPresident;
+	this.presidentIndex = 0;
+
 	openGames.push(this);
 
 //LOBBY
@@ -40,16 +44,13 @@ var Game = function(size) {
 		this.started = true;
 		this.playerCount = this.players.length;
 
-		this.presidentIndex = 0;
-		this.specialPresident = null;
-
 		this.emit('lobby game', this);
 	}
 
 	this.getFascistPower = function() {
 		var enacted = this.fascistEnacted;
 		if (enacted == 1) {
-			return 'peek'; //SAMPLE
+			return 'bullet'; //SAMPLE
 			// return this.playerCount >= 9 ? 'investigate' : null;
 		}
 		if (enacted == 2) {
@@ -68,20 +69,20 @@ var Game = function(size) {
 
 //STATE
 
-	this.president = function() {
-		return this.specialPresident || this.presidentIndex;
-	}
-
 	this.advanceTurn = function() {
 		this.turn = {};
-		if (this.specialPresident) {
+		if (this.specialPresident != null) {
+			this.presidentIndex = this.specialPresident;
+			console.log('s p', this.specialPresident);
 			this.specialPresident = null;
 		} else {
-			++this.presidentIndex;
-			if (this.presidentIndex >= this.playerCount) {
-				this.presidentIndex = 0;
+			++this.positionIndex;
+			if (this.positionIndex >= this.playerCount) {
+				this.positionIndex = 0;
 			}
+			this.presidentIndex = this.positionIndex;
 		}
+		console.log('Adv', this.presidentIndex)
 	}
 
 	this.finish = function() {
@@ -126,7 +127,7 @@ var Game = function(size) {
 			// player.emitOthers('lobby game', this);
 		} else {
 			player.index = this.players.length;
-			this.players.push({uid: player.uid, name: player.name});
+			this.players.push({uid: player.uid, name: player.name, index: player.index});
 
 			if (this.isFull()) {
 				this.start();

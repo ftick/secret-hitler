@@ -24,11 +24,11 @@ var Player = function(socket, uid, name) {
 	}
 
 	this.isPresident = function() {
-		return this.index == this.game.president();
+		return this.index == this.game.presidentIndex;
 	}
 
-	this.notData = function(data) {
-		return this.uid != data.uid;
+	this.equals = function(data) {
+		return this.uid == data.uid;
 	}
 
 	this.gamePlayer = function(socket) {

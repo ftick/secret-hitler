@@ -1,3 +1,5 @@
+//ACTIONS
+
 var chatAction = function(data, player) {
 	console.log('chat', data)
 	data.uid = player.uid;
@@ -5,14 +7,13 @@ var chatAction = function(data, player) {
 	return data;
 }
 
-var choosePlayerAction = function(data, player, game) {
-	console.log('choose player', data)
+var chancellorAction = function(data, player, game) {
 	if (game.turn.chancellor) {
 		console.log('Chancellor already chosen for ' + player.uid);
 		return;
 	}
-
-	if (player.notData(data) && player.isPresident()) {
+	console.log(player.uid, data.uid, player.index, player.game.presidentIndex);
+	if (!player.equals(data) && player.isPresident()) {
 		var chancellorData = {president: player.uid, chancellor: data.uid};
 		chancellorData = player.emitAction('chancellor chosen', chancellorData);
 		game.turn.chancellor = data.uid;
@@ -78,13 +79,54 @@ var policyAction = function(data, player, game) {
 	}
 }
 
-var peekAction = function(data, player, game) {
-	if (player.isPresident() && game.power == 'peek') {
+//POWERS
+
+var playerPower = function(action, uid, player, game) {
+	if (player.isPresident() && game.power == action) {
 		data = player.emitAction('peeked', data);
 		game.advanceTurn();
 		return data;
 	}
 }
+
+var powerAction = function(action, data, player, game) {
+	if (player.isPresident() && game.power == action) {
+		if (action == 'peek') {
+			data = player.emitAction('peeked', data);
+		} else {
+			if (player.equals(data)) {
+				return;
+			}
+			var targetUid = data.uid;
+			var target = game.getPlayer(targetUid);
+			console.log('pa', targetUid, game.turn);
+			if (action == 'investigate') {
+				if (target.investigated) {
+					return;
+				}
+				target.investigated = true;
+				data = player.emitAction('investigated', data);
+			} else if (action == 'election') {
+				if (game.turn.chancellor == targetUid) {
+					return;
+				}
+				game.specialPresident = target.index;
+				console.log('special president', game.specialPresident);
+				data = player.emitAction('special election', data);
+			} else if (action == 'bullet') {
+				if (target.killed) {
+					return;
+				}
+				target.killed = true;
+				data = player.emitAction('killed', data);
+			}
+		}
+		game.advanceTurn();
+		return data;
+	}
+}
+
+//EXPORT
 
 module.exports = function(socket) {
 
@@ -96,14 +138,14 @@ module.exports = function(socket) {
 		var recording;
 		if (action == 'chat') {
 			recording = chatAction(data, player);
-		} else if (action == 'choose player') {
-			recording = choosePlayerAction(data, player, game);
+		} else if (action == 'chancellor') {
+			recording = chancellorAction(data, player, game);
 		} else if (action == 'vote') {
 			recording = voteAction(data, player, game);
 		} else if (action == 'policy') {
 			recording = policyAction(data, player, game);
-		} else if (action == 'peek') {
-			recording = peekAction(data, player, game);
+		} else {
+			recording = powerAction(action, data, player, game);
 		}
 		if (recording) {
 			var historyIndex = game.history.length;
