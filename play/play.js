@@ -78,6 +78,14 @@ var policyAction = function(data, player, game) {
 	}
 }
 
+var peekAction = function(data, player, game) {
+	if (player.isPresident() && game.power == 'peek') {
+		data = player.emitAction('peeked', data);
+		game.advanceTurn();
+		return data;
+	}
+}
+
 module.exports = function(socket) {
 
 	socket.on('game action', function(data) {
@@ -94,6 +102,8 @@ module.exports = function(socket) {
 			recording = voteAction(data, player, game);
 		} else if (action == 'policy') {
 			recording = policyAction(data, player, game);
+		} else if (action == 'peek') {
+			recording = peekAction(data, player, game);
 		}
 		if (recording) {
 			var historyIndex = game.history.length;
