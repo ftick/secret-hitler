@@ -46,7 +46,10 @@ var Game = function(size) {
 		if (this.specialPresident) {
 			this.specialPresident = null;
 		} else {
-			this.presidentIndex += 1;
+			++this.presidentIndex;
+			if (this.presidentIndex > this.size) {
+				this.presidentIndex = 0;
+			}
 		}
 		this.emit('turn completed');
 	}

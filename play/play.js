@@ -48,7 +48,7 @@ var voteAction = function(data, player, game) {
 			}
 			gp.vote = null;
 		});
-		var elected = supportCount > Math.floor(gamePlayers / 2);
+		var elected = supportCount > Math.floor(game.size / 2);
 
 		var voteData = {supporting: supporting, elected: elected};
 		voteData = player.emitAction('voted', voteData);
