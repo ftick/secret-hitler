@@ -22,6 +22,7 @@ var Game = function(size) {
 	this.emitAction = function(name, data) {
 		data.action = name;
 		this.emit('game action', data);
+		return data;
 	}
 
 	this.start = function(socket) {

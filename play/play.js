@@ -1,7 +1,8 @@
 
-var chatAction = function(data) {
+var chatAction = function(data, player) {
 	console.log('chat', data)
-	player.emitAction('chat', data);
+	data.uid = player.uid;
+	data = player.emitAction('chat', data);
 	return data;
 }
 
@@ -14,8 +15,7 @@ var choosePlayerAction = function(data, player, game) {
 
 	if (player.notData(data) && player.isPresident()) {
 		var chancellorData = {president: player.uid, chancellor: data.uid};
-		player.emitAction('chancellor chosen', chancellorData);
-		chancellorData.action = 'chancellor chosen';
+		chancellorData = player.emitAction('chancellor chosen', chancellorData);
 		game.turn.chancellor = data.uid;
 		return chancellorData;
 	}
@@ -51,14 +51,28 @@ var voteAction = function(data, player, game) {
 		var elected = supportCount > Math.floor(gamePlayers / 2);
 
 		var voteData = {supporting: supporting, elected: elected};
-		player.emitAction('voted', voteData);
-		voteData.action = 'voted';
+		voteData = player.emitAction('voted', voteData);
 
 		if (!elected) {
 			game.advanceTurn();
 		}
 
 		return voteData;
+	}
+}
+
+var discardAction = function(data, player, game) {
+	if (player.isPresident()) {
+		if (!game.turn.presidentDiscard) {
+			game.turn.presidentDiscard = data.discard;
+		}
+	} else if (uid == game.turn.chancellor) {
+		if (game.turn.presidentDiscard && !game.turn.chancellorDiscard) {
+			game.turn.chancellorDiscard = data.discard;
+
+		}
+	} else {
+		console.log('Invalid discard', uid, data);
 	}
 }
 
@@ -76,12 +90,19 @@ module.exports = function(socket) {
 			recording = choosePlayerAction(data, player, game);
 		} else if (action == 'vote') {
 			recording = voteAction(data, player, game);
+		} else if (action == 'discard policy') {
+			recording = discardAction(data, player, game);
 		}
 		if (recording) {
 			var historyIndex = game.history.length;
 			recording.i = historyIndex;
 			game.history[historyIndex] = recording;
 		}
+	});
+
+	socket.on('typing', function(data) {
+		var player = socket.player;
+		player.emitOthers('typing', {uid: player.uid, on: data.on});
 	});
 
 }

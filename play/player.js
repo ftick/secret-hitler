@@ -20,7 +20,7 @@ var Player = function(socket, uid, name) {
 	}
 
 	this.emitAction = function(name, data) {
-		this.game.emitAction(name, data);
+		return this.game.emitAction(name, data);
 	}
 
 	this.isPresident = function() {
