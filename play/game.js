@@ -40,7 +40,7 @@ var Game = function(size) {
 		return this.specialPresident || this.presidentIndex;
 	}
 
-	this.advance = function() {
+	this.advanceTurn = function() {
 		this.turn = {};
 		if (this.specialPresident) {
 			this.specialPresident = null;

@@ -16,6 +16,7 @@ var choosePlayerAction = function(data, player, game) {
 		var chancellorData = {president: player.uid, chancellor: data.uid};
 		player.emitAction('chancellor chosen', chancellorData);
 		chancellorData.action = 'chancellor chosen';
+		game.turn.chancellor = data.uid;
 		return chancellorData;
 	}
 }
@@ -29,9 +30,9 @@ var voteAction = function(data, player, game) {
 	var gamePlayer = player.gamePlayer();
 	gamePlayer.vote = data.up;
 	var doneVoting = true;
-	console.log(game.players);
-	game.players.forEach(function(gp) {
-		if (gp.vote === null) {
+	var gamePlayers = game.players;
+	gamePlayers.forEach(function(gp) {
+		if (gp.vote == null) {
 			doneVoting = false;
 		}
 	});
@@ -39,14 +40,24 @@ var voteAction = function(data, player, game) {
 		game.turn.voted = true;
 
 		var supporting = [];
-		game.players.forEach(function(gp, idx) {
+		var supportCount = 0;
+		gamePlayers.forEach(function(gp, idx) {
 			supporting[idx] = gp.vote;
+			if (gp.vote) {
+				++supportCount;
+			}
 			gp.vote = null;
 		});
+		var elected = supportCount > Math.floor(gamePlayers / 2);
 
-		var voteData = {supporting: supporting};
+		var voteData = {supporting: supporting, elected: elected};
 		player.emitAction('voted', voteData);
 		voteData.action = 'voted';
+
+		if (!elected) {
+			game.advanceTurn();
+		}
+
 		return voteData;
 	}
 }
