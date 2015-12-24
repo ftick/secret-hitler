@@ -1,10 +1,21 @@
-//ACTIONS
+
+//MANAGE
 
 var chatAction = function(data, player) {
 	data.uid = player.uid;
 	data = player.emitAction('chat', data);
 	return data;
 }
+
+var quitAction = function(data, player, game, socket) {
+	if (!player.left) {
+		if (game.removePlayer(socket, true)) {
+			return game.emitAction('abandoned', {uid: player.uid});
+		}
+	}
+}
+
+//PLAY
 
 var chancellorAction = function(data, player, game) {
 	if (game.turn.chancellor) {
@@ -142,10 +153,16 @@ module.exports = function(socket) {
 	socket.on('game action', function(data) {
 		var action = data.action;
 		var player = socket.player;
+		if (!player) {
+			console.log('Socket invalid player', socket.uid, action);
+			return;
+		}
 		var game = player.game;
 
 		var recording;
-		if (action == 'chat') {
+		if (action == 'quit') {
+			recording = quitAction(data, player, game, socket);
+		} else if (action == 'chat') {
 			recording = chatAction(data, player);
 		} else if (action == 'chancellor') {
 			recording = chancellorAction(data, player, game);

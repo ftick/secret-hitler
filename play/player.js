@@ -32,7 +32,7 @@ var Player = function(socket, uid, name) {
 	}
 
 	this.gamePlayer = function(socket) {
-		return this.game.players[this.index];
+		return this.game ? this.game.players[this.index] : null;
 	}
 
 	return this;

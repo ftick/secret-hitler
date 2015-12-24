@@ -74,7 +74,6 @@ var Game = function(size) {
 		this.turn = {};
 		if (this.specialPresident != null) {
 			this.presidentIndex = this.specialPresident;
-			console.log('s p', this.specialPresident);
 			this.specialPresident = null;
 		} else {
 			var player;
@@ -87,7 +86,6 @@ var Game = function(size) {
 			}
 			this.presidentIndex = this.positionIndex;
 		}
-		console.log('Adv', this.presidentIndex)
 	}
 
 	this.finish = function() {
@@ -149,24 +147,34 @@ var Game = function(size) {
 		});
 	}
 
-	this.removePlayer = function(socket) {
+	this.removePlayer = function(socket, permanently) {
 		socket.leave(this.gid);
 
-		var permanently = !this.started || this.activeCount() <= 1;
+		if (!permanently && !this.started) {
+			permanently = true;
+		}
 		if (permanently) {
-			var uid = socket.player.uid;
-			socket.player.game = null;
+			var player = socket.player;
+			var uid = player.uid;
 
 			var existingPlayer = this.getPlayer(uid);
+			if (existingPlayer.left) {
+				return false;
+			}
 			if (existingPlayer) {
+				if (this.presidentIndex == existingPlayer.index || this.chancellorIndex == existingPlayer.index) {
+					this.advanceTurn();
+				}
 				if (this.started) {
 					existingPlayer.left = true;
+					existingPlayer.killed = true;
 				} else {
-					this.players.filter(function(player) {
-						return player.uid != uid;
+					this.players.filter(function(p) {
+						return p.uid != uid;
 					});
 				}
 			}
+			player.game = null;
 			if (this.players.length <= 0) {
 				this.removeSelf()
 				return
@@ -177,6 +185,7 @@ var Game = function(size) {
 				player.disconnected = true;
 			}
 		}
+		return true;
 	}
 
 //HELPERS
