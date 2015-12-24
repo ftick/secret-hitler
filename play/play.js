@@ -1,7 +1,6 @@
 //ACTIONS
 
 var chatAction = function(data, player) {
-	console.log('chat', data)
 	data.uid = player.uid;
 	data = player.emitAction('chat', data);
 	return data;
@@ -12,7 +11,10 @@ var chancellorAction = function(data, player, game) {
 		console.log('Chancellor already chosen for ' + player.uid);
 		return;
 	}
-	console.log(player.uid, data.uid, player.index, player.game.presidentIndex);
+	if (data.uid == game.chancellorElect || (game.playerCount > 5 && data.uid == game.presidentElect)) {
+		console.log('Player involved in the last election', data.uid, game.presidentElect, game.chancellorElect);
+		return
+	}
 	if (!player.equals(data) && player.isPresident()) {
 		var chancellorData = {president: player.uid, chancellor: data.uid};
 		chancellorData = player.emitAction('chancellor chosen', chancellorData);
@@ -26,7 +28,6 @@ var voteAction = function(data, player, game) {
 		console.log('vote already complete');
 		return;
 	}
-	console.log('vote', data);
 	var gamePlayer = player.gamePlayer();
 	gamePlayer.vote = data.up;
 	var doneVoting = true;
@@ -53,7 +54,16 @@ var voteAction = function(data, player, game) {
 		var voteData = {supporting: supporting, elected: elected};
 		voteData = player.emitAction('voted', voteData);
 
-		if (!elected) {
+		if (elected) {
+			game.presidentElect = game.players[game.presidentIndex].uid;
+			game.chancellorElect = game.turn.chancellor;
+		} else {
+			++this.electionTracker;
+			if (this.electionTracker >= 3) {
+				this.electionTracker = 0;
+				game.presidentElect = null;
+				game.chancellorElect = null;
+			}
 			game.advanceTurn();
 		}
 
@@ -111,7 +121,6 @@ var powerAction = function(action, data, player, game) {
 					return;
 				}
 				game.specialPresident = target.index;
-				console.log('special president', game.specialPresident);
 				data = player.emitAction('special election', data);
 			} else if (action == 'bullet') {
 				if (target.killed) {
