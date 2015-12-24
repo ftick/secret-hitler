@@ -76,13 +76,15 @@ var Game = function(size) {
 			this.presidentIndex = this.specialPresident;
 			this.specialPresident = null;
 		} else {
-			var player;
-			while (!player || player.killed) {
+			for (var attempts = 0; attempts < this.playerCount; ++attempts) {
 				++this.positionIndex;
 				if (this.positionIndex >= this.playerCount) {
 					this.positionIndex = 0;
 				}
-				player = this.players[this.positionIndex];
+				var player = this.players[this.positionIndex];
+				if (!player.killed) {
+					break;
+				}
 			}
 			this.presidentIndex = this.positionIndex;
 		}
@@ -162,12 +164,12 @@ var Game = function(size) {
 				return false;
 			}
 			if (existingPlayer) {
-				if (this.presidentIndex == existingPlayer.index || this.chancellorIndex == existingPlayer.index) {
-					this.advanceTurn();
-				}
 				if (this.started) {
 					existingPlayer.left = true;
 					existingPlayer.killed = true;
+					if (this.presidentIndex == existingPlayer.index || this.chancellorIndex == existingPlayer.index) {
+						this.advanceTurn();
+					}
 				} else {
 					this.players.filter(function(p) {
 						return p.uid != uid;

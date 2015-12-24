@@ -8,8 +8,6 @@ DB.update('users', 'online_count > 0', {online_count: 0});
 
 io = SocketIO();
 
-io.listen(process.env.PORT || 8000);
-
 io.on('connection', function(socket) {
 	var query = socket.handshake.query;
 	Signin(socket, parseInt(query.uid), query.auth);
@@ -30,3 +28,5 @@ io.on('connection', function(socket) {
 	});
 
 });
+
+io.listen(process.env.PORT || 8000);
