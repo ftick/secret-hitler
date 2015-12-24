@@ -51,8 +51,8 @@ var Game = function(size) {
 	this.getFascistPower = function() {
 		var enacted = this.fascistEnacted;
 		if (enacted == 1) {
-			return 'bullet'; //SAMPLE
-			// return this.playerCount >= 9 ? 'investigate' : null;
+			// return 'bullet'; //SAMPLE
+			return this.playerCount >= 9 ? 'investigate' : null;
 		}
 		if (enacted == 2) {
 			return this.playerCount >= 7 ? 'investigate' : null;

@@ -114,4 +114,10 @@ module.exports = {
 		});
 	},
 
+	count: function(table, callback) {
+		query('SELECT COUNT(*) FROM ' + table, null, function(result) {
+			callback(result[0].count);
+		});
+	},
+
 }

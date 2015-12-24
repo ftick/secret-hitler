@@ -7,6 +7,7 @@ var Player = require.main.require('./play/player');
 var authenticate = function(socket, uid, auth) {
 	DB.fetch('name, email', 'users', 'id = $1 AND auth_key = $2', [uid, auth], function(response) {
 		if (response) {
+			socket.uid = uid;
 			DB.query('UPDATE users SET online_at = '+Utils.seconds()+', online_count = online_count + 1 WHERE id = '+uid, null);
 			socket.authed = true;
 			var player = Player.allPlayers[uid];
@@ -29,6 +30,24 @@ module.exports = function(socket, uid, auth) {
 	}
 
 	var returnForSignin = 'id, auth_key';
+
+	socket.on('guest login', function(data, callback) {
+		DB.fetch('id, auth_key', 'users', 'online_count = $1 AND guest = $2', [0, true], function(userData) {
+			var insertCallback = function(response) {
+				authenticate(socket, response.id, response.auth_key);
+				callback(response);
+			}
+			if (userData) {
+				insertCallback(userData);
+			} else {
+				DB.count('users', function(guestNumber) {
+					var authKey = Utils.uid() + Utils.uid();
+					var userBegin = {guest: true, name: 'guest'+guestNumber, email: guestNumber+'@secrethitler.com', auth_key: authKey};
+					DB.insert('users', userBegin, returnForSignin, insertCallback);
+				});
+			}
+		});
+	});
 
 	socket.on('signin', function(data, callback) {
 		authenticate(socket, data.uid, data.auth);
