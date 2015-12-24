@@ -24,6 +24,7 @@ var Game = function(size) {
 	this.positionIndex = 0;
 	this.specialPresident;
 	this.presidentIndex = 0;
+	this.electionTracker = 0;
 
 	openGames.push(this);
 
@@ -76,9 +77,13 @@ var Game = function(size) {
 			console.log('s p', this.specialPresident);
 			this.specialPresident = null;
 		} else {
-			++this.positionIndex;
-			if (this.positionIndex >= this.playerCount) {
-				this.positionIndex = 0;
+			var player;
+			while (!player || player.killed) {
+				++this.positionIndex;
+				if (this.positionIndex >= this.playerCount) {
+					this.positionIndex = 0;
+				}
+				player = this.players[this.positionIndex];
 			}
 			this.presidentIndex = this.positionIndex;
 		}
