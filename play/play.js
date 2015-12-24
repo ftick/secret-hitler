@@ -40,11 +40,14 @@ var voteAction = function(data, player, game) {
 		return;
 	}
 	var gamePlayer = player.gamePlayer();
+	if (gamePlayer.killed) {
+		return;
+	}
 	gamePlayer.vote = data.up;
 	var doneVoting = true;
 	var gamePlayers = game.players;
 	gamePlayers.forEach(function(gp) {
-		if (gp.vote == null) {
+		if (!gp.killed && gp.vote == null) {
 			doneVoting = false;
 		}
 	});
@@ -60,7 +63,7 @@ var voteAction = function(data, player, game) {
 			}
 			gp.vote = null;
 		});
-		var elected = supportCount > Math.floor(game.size / 2);
+		var elected = supportCount > Math.floor(game.currentCount / 2);
 
 		var voteData = {supporting: supporting, elected: elected};
 		voteData = player.emitAction('voted', voteData);
@@ -103,11 +106,14 @@ var policyAction = function(data, player, game) {
 //POWERS
 
 var playerPower = function(action, uid, player, game) {
-	if (player.isPresident() && game.power == action) {
-		data = player.emitAction('peeked', data);
-		game.advanceTurn();
-		return data;
+	if (!player.isPresident() || game.power != action) {
+		console.log('Invalid power', player.isPresident(), game.power, action);
+		return;
 	}
+
+	data = player.emitAction('peeked', data);
+	game.advanceTurn();
+	return data;
 }
 
 var powerAction = function(action, data, player, game) {
@@ -137,7 +143,7 @@ var powerAction = function(action, data, player, game) {
 				if (target.killed) {
 					return;
 				}
-				target.killed = true;
+				game.kill(target);
 				data = player.emitAction('killed', data);
 			}
 		}

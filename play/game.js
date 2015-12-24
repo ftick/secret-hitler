@@ -11,7 +11,7 @@ var openGames = [];
 
 var Game = function(size) {
 	this.gid = Utils.uid();
-	this.size = size;
+	this.maxSize = size;
 	this.status = 'OPEN';
 	this.players = [];
 	this.state = {};
@@ -20,6 +20,7 @@ var Game = function(size) {
 	this.liberalEnacted = 0;
 	this.fascistEnacted = 0;
 	this.playerCount;
+	this.currentCount;
 
 	this.positionIndex = 0;
 	this.specialPresident;
@@ -44,6 +45,7 @@ var Game = function(size) {
 		this.status = 'PLAYING';
 		this.started = true;
 		this.playerCount = this.players.length;
+		this.currentCount = this.playerCount;
 
 		this.emit('lobby game', this);
 	}
@@ -62,9 +64,6 @@ var Game = function(size) {
 		}
 		if (enacted == 4 || enacted == 5) {
 			return 'bullet';
-		}
-		if (enacted == 6) {
-			return 'win';
 		}
 	}
 
@@ -88,6 +87,7 @@ var Game = function(size) {
 			}
 			this.presidentIndex = this.positionIndex;
 		}
+		this.power = null;
 	}
 
 	this.finish = function() {
@@ -103,7 +103,6 @@ var Game = function(size) {
 				this.finish()
 				return;
 			}
-			this.power = null;
 		} else {
 			++this.fascistEnacted;
 			if (this.fascistEnacted >= FASCIST_POLICIES_REQUIRED) {
@@ -142,6 +141,13 @@ var Game = function(size) {
 		}
 	}
 
+	this.kill = function(gamePlayer) {
+		if (!gamePlayer.killed) {
+			gamePlayer.killed = true;
+			--this.currentCount;
+		}
+	}
+
 	this.removeSelf = function() {
 		var gid = this.gid;
 		openGames.filter(function(game) {
@@ -166,8 +172,8 @@ var Game = function(size) {
 			if (existingPlayer) {
 				if (this.started) {
 					existingPlayer.left = true;
-					existingPlayer.killed = true;
-					if (this.presidentIndex == existingPlayer.index || this.chancellorIndex == existingPlayer.index) {
+					this.kill(existingPlayer);
+					if (this.presidentIndex == existingPlayer.index || this.turn.chancellor == existingPlayer.uid) {
 						this.advanceTurn();
 					}
 				} else {
@@ -215,7 +221,7 @@ var Game = function(size) {
 	}
 
 	this.isFull = function() {
-		return this.players.length >= this.size;
+		return this.players.length >= this.maxSize;
 	}
 
 	this.activeCount = function() {
