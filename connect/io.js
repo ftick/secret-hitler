@@ -4,6 +4,8 @@ var DB = require.main.require('./tools/db');
 var Signin = require('./signin');
 var Play = require.main.require('./play/play');
 
+DB.update('users', 'online_count > 0', {online_count: 0});
+
 io = SocketIO();
 
 io.listen(process.env.PORT || 8000);
