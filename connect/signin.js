@@ -119,6 +119,7 @@ module.exports = function(socket, uid, auth) {
 					authenticate(socket, response.id, response.auth_key);
 					callback(response);
 				}
+				console.log('Registered', userData.id, username, email);
 				if (replace) {
 					DB.update('users', 'id = '+userData.id, userBegin, returnForSignin, insertCallback);
 				} else {

@@ -8,6 +8,8 @@ var rngInt = function(generator, max) {
 
 module.exports = {
 
+	TESTING: process.env.DATABASE_URL != null,
+
 	seconds: function() {
 		return Math.round(Date.now() * 0.001);
 	},
