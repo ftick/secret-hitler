@@ -8,7 +8,7 @@ var authenticate = function(socket, uid, auth) {
 	DB.fetch('name, email', 'users', 'id = $1 AND auth_key = $2', [uid, auth], function(response) {
 		if (response) {
 			socket.uid = uid;
-			DB.query('UPDATE users SET online_at = '+Utils.seconds()+', online_count = online_count + 1 WHERE id = '+uid, null);
+			DB.query('UPDATE users SET online_at = '+Utils.now()+', online_count = online_count + 1 WHERE id = '+uid, null);
 
 			var oldPlayer = Player.get(uid);
 			var player = new Player(socket, uid, response.name, oldPlayer);
@@ -52,7 +52,7 @@ module.exports = function(socket, uid, auth) {
 	});
 
 	socket.on('signin email', function(data, callback) {
-		var now = Utils.seconds();
+		var now = Utils.now();
 		var email = data.email;
 		DB.fetch('id, name, email, auth_key, passcode, passcode_time', 'users', 'email = $1', [email], function(userData) {
 			if (userData) {
@@ -80,7 +80,7 @@ module.exports = function(socket, uid, auth) {
 		var passkey = data.pass;
 		DB.fetch('id, name, auth_key', 'users', 'email = $1 AND passcode = $2', [email, passkey], function(userData) {
 			if (userData) {
-				var now = Utils.seconds();
+				var now = Utils.now();
 				if (now - userData.passcode_time > 1800) {
 					callback({error: 'Passkey expired. Please redo the process for a new key and try again.'});
 				} else {

@@ -54,7 +54,7 @@ var property = function(column, table, where, params, callback) {
 // UPSERT
 
 var update = function(table, where, columnsValues, returning, callback) {
-	columnsValues.updated_at = Utils.seconds();
+	columnsValues.updated_at = Utils.now();
 
 	var columns = [], values = [], placeholders = [];
 	var index = 0;
@@ -69,7 +69,7 @@ var update = function(table, where, columnsValues, returning, callback) {
 }
 
 var insert = function(table, columnsValues, returning, callback) {
-	var now = Utils.seconds();
+	var now = Utils.now();
 	if (!columnsValues.created_at) {
 		columnsValues.created_at = now;
 	}

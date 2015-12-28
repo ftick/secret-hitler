@@ -1,5 +1,4 @@
 var Utils = require.main.require('./tools/utils');
-var DB = require.main.require('./tools/db');
 
 var Game = require.main.require('./play/game');
 

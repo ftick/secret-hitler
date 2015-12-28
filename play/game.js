@@ -1,3 +1,4 @@
+var DB = require.main.require('./tools/db');
 var Utils = require.main.require('./tools/utils');
 var SeedRandom = require('seedrandom');
 
@@ -26,15 +27,17 @@ var Game = function(size) {
 	this.playerCount;
 	this.currentCount;
 	this.policyDeck;
+	this.hitlerUid;
 
 	this.positionIndex;
 	this.specialPresident;
 	this.presidentIndex;
-	this.hitlerUid;
 	this.electionTracker = 0;
 
 	var game = this;
 	games.push(this);
+
+	DB.insert('games', {id: this.gid});
 
 //PRIVATE
 
@@ -141,6 +144,9 @@ var Game = function(size) {
 		this.presidentIndex = this.positionIndex;
 		this.shufflePolicyDeck();
 
+		var playerIdData = this.players.join(',');
+		DB.update('games', "id = '"+this.gid+"'", {state: 1, started_at: Utils.now(), start_index: this.startIndex, player_count: this.playerCount, player_ids: playerIdData});
+
 		// Assign Fascists
 		var facistsCount = Math.ceil(this.playerCount / 2) - 1
 		var fascistIndicies = [2];
@@ -206,23 +212,24 @@ var Game = function(size) {
 		this.power = null;
 	}
 
-	this.finish = function() {
+	this.finish = function(liberals, method) {
 		console.log('FIN', this.gid);
-		this.finished;
-		//TODO save
+		this.finished = true;
+		DB.update('games', "id = '"+this.gid+"'", {state: 2, finished_at: Utils.now(), history: JSON.stringify(this.history), enacted_liberal: this.liberalEnacted, enacted_fascist: this.fascistEnacted, liberal_victory: liberals, win_method: method});
+		this.removeSelf();
 	}
 
 	this.enact = function(policy) {
 		if (policy == LIBERAL) {
 			++this.liberalEnacted;
 			if (this.liberalEnacted >= LIBERAL_POLICIES_REQUIRED) {
-				this.finish()
+				this.finish(true, 'policy');
 				return;
 			}
 		} else {
 			++this.fascistEnacted;
 			if (this.fascistEnacted >= FASCIST_POLICIES_REQUIRED) {
-				this.finish()
+				this.finish(false, 'policy');
 				return;
 			}
 			this.power = this.getFascistPower();
@@ -280,6 +287,9 @@ var Game = function(size) {
 		games = games.filter(function(g) {
 			return g.gid != gid;
 		});
+		if (!this.finished) {
+			DB.query("DELETE FROM games WHERE id = '"+gid+"'");
+		}
 	}
 
 	this.disconnect = function(socket) {

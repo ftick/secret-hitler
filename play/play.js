@@ -11,7 +11,11 @@ var chatAction = function(data, player) {
 var quitAction = function(data, player, game, socket) {
 	if (!player.gameState.left) {
 		if (game.remove(socket)) {
-			return game.emitAction('abandoned', {uid: player.uid, hitler: player.uid == game.hitlerUid});
+			var isHitler = player.uid == game.hitlerUid;
+			if (isHitler) {
+				game.finish(true, 'hitler quit');
+			}
+			return game.emitAction('abandoned', {uid: player.uid, hitler: isHitler});
 		}
 	}
 }
@@ -32,7 +36,7 @@ var chancellorAction = function(data, player, game) {
 		var hitler = false;
 		if (game.fascistEnacted >= 3 && data.uid == game.hitlerUid) {
 			hitler = true;
-			game.finish();
+			game.finish(false, 'hitler');
 		}
 		var chancellorData = {president: player.uid, chancellor: data.uid, hitler: hitler};
 		chancellorData = player.emitAction('chancellor chosen', chancellorData);
@@ -164,7 +168,12 @@ var powerAction = function(action, data, player, game) {
 					return;
 				}
 				game.kill(target);
-				data.hitler = target.uid == game.hitlerUid;
+
+				var isHitler = target.uid == game.hitlerUid;
+				data.hitler = isHitler;
+				if (isHitler) {
+					game.finish(true, 'hitler');
+				}
 				data = game.emitAction('killed', data);
 			}
 		}

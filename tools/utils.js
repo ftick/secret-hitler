@@ -6,7 +6,7 @@ module.exports = {
 
 	TESTING: process.env.DATABASE_URL != null,
 
-	seconds: function() {
+	now: function() {
 		return Math.round(Date.now() * 0.001);
 	},
 
