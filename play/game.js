@@ -1,4 +1,5 @@
 var Utils = require.main.require('./tools/utils');
+var SeedRandom = require('seedrandom');
 
 var Player = require.main.require('./play/player');
 
@@ -15,9 +16,10 @@ var Game = function(size) {
 	this.gid = Utils.uid();
 	this.maxSize = size;
 	this.players = [];
-	this.state = {};
-	this.turn = {};
 	this.history = [];
+
+	this.generator = SeedRandom(this.gid);
+	this.turn = {};
 	this.liberalEnacted = 0;
 	this.fascistEnacted = 0;
 	this.playerCount;
@@ -33,6 +35,10 @@ var Game = function(size) {
 
 //PRIVATE
 
+	this.shuffle = function(array) {
+		return Utils.randomize(this.generator, array);
+	}
+
 	this.shufflePolicyDeck = function() {
 		this.policyDeck = [];
 
@@ -41,7 +47,7 @@ var Game = function(size) {
 		for (var i = 0; i < cardsRemaining; ++i) {
 			this.policyDeck[i] = i < liberalsRemaining ? LIBERAL : FASCIST;
 		}
-		this.policyDeck = Utils.randomize(this.policyDeck);
+		this.policyDeck = this.shuffle(this.policyDeck);
 		console.log(this.policyDeck);
 	}
 
@@ -131,7 +137,7 @@ var Game = function(size) {
 		for (var i = 1; i < this.playerCount; ++i) {
 			fascistIndicies[i] = i < facistsCount ? 1 : 0;
 		}
-		fascistIndicies = Utils.randomize(fascistIndicies);
+		fascistIndicies = this.shuffle(fascistIndicies);
 		this.players.forEach(function(puid, pidx) {
 			var player = Player.get(puid);
 			player.gameState.allegiance = fascistIndicies[pidx];

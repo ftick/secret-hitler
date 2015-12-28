@@ -1,3 +1,11 @@
+var rng = function(generator) {
+	return generator.int32();
+}
+
+var rngInt = function(generator, max) {
+	return Math.abs(rng(generator)) % (max + 1);
+}
+
 module.exports = {
 
 	seconds: function() {
@@ -14,13 +22,13 @@ module.exports = {
 
 //RANDOM
 
-	randomize: function(arr) {
+	randomize: function(generator, arr) {
 		var result = [], swapIndex;
 		arr.forEach(function(val, idx) {
 			if (!idx) {
 				result[0] = val;
 			} else {
-				swapIndex = Math.floor(Math.random() * (idx + 1));
+				swapIndex = rngInt(generator, idx);
 				result[idx] = result[swapIndex];
 				result[swapIndex] = val;
 			}
