@@ -21,17 +21,17 @@ module.exports = {
 //RANDOM
 
 	rngInt: function(generator, max) {
-		return Math.abs(rng(generator)) % (max + 1);
+		return Math.abs(rng(generator)) % max;
 	},
 
-	randomize: function(generator, arr) {
+	randomize: function(generator, array) {
 		var result = [], swapIndex;
 		var Utils = this;
-		arr.forEach(function(val, idx) {
+		array.forEach(function(val, idx) {
 			if (!idx) {
 				result[0] = val;
 			} else {
-				swapIndex = Utils.rngInt(generator, idx);
+				swapIndex = Utils.rngInt(generator, idx + 1);
 				result[idx] = result[swapIndex];
 				result[swapIndex] = val;
 			}
