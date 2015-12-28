@@ -1,5 +1,7 @@
 var Utils = require.main.require('./tools/utils');
 
+var Player = require.main.require('./play/player');
+
 var LIBERAL = 'liberal';
 var FASCIST = 'fascist';
 var NONE = 'none';
@@ -7,12 +9,11 @@ var NONE = 'none';
 var FASCIST_POLICIES_REQUIRED = 6;
 var LIBERAL_POLICIES_REQUIRED = 5;
 
-var openGames = [];
+var games = [];
 
 var Game = function(size) {
 	this.gid = Utils.uid();
 	this.maxSize = size;
-	this.status = 'OPEN';
 	this.players = [];
 	this.state = {};
 	this.turn = {};
@@ -21,13 +22,49 @@ var Game = function(size) {
 	this.fascistEnacted = 0;
 	this.playerCount;
 	this.currentCount;
+	this.policyDeck;
 
 	this.positionIndex = 0;
 	this.specialPresident;
 	this.presidentIndex = 0;
 	this.electionTracker = 0;
 
-	openGames.push(this);
+	games.push(this);
+
+//PRIVATE
+
+	this.shufflePolicyDeck = function() {
+		this.policyDeck = [];
+
+		var cardsRemaining = 17 - this.fascistEnacted - this.liberalEnacted;
+		var liberalsRemaining = 6 - this.liberalEnacted;
+		for (var i = 0; i < cardsRemaining; ++i) {
+			this.policyDeck[i] = i < liberalsRemaining ? LIBERAL : FASCIST;
+		}
+		this.policyDeck = Utils.randomize(this.policyDeck);
+		console.log(this.policyDeck);
+	}
+
+//POLICIES
+
+	this.peekPolicies = function() {
+		return this.policyDeck.slice(0, 3);
+	}
+
+	this.getTopPolicies = function(count) {
+		if (!count) {
+			count = 3;
+		}
+		var policies = this.policyDeck.splice(0, count);
+		if (this.policyDeck.length < 3) {
+			this.shufflePolicyDeck();
+		}
+		return policies;
+	}
+
+	this.getTopPolicy = function() {
+		return this.getTopPolicies(1)[0];
+	}
 
 //LOBBY
 
@@ -35,25 +72,54 @@ var Game = function(size) {
 		io.to(this.gid).emit(name, data);
 	}
 
-	this.emitAction = function(name, data) {
+	this.emitAction = function(name, data, secret) {
 		data.action = name;
-		this.emit('game action', data);
+		if (secret) {
+			console.log(secret);
+			var target = Player.get(secret.target);
+			target.emitOthers('game action', data);
+			data.secret = secret;
+			target.emit('game action', data);
+		} else {
+			this.emit('game action', data);
+		}
 		return data;
 	}
 
+	this.gameData = function() {
+		var sendHistory = this.history;
+		var sendPlayers = [];
+		this.players.forEach(function(uid, index) {
+			var player = Player.get(uid);
+			sendPlayers[index] = {
+				uid: uid,
+				name: player.name,
+				index: index,
+			};
+		});
+		return {
+			gid: this.gid,
+			started: this.started,
+			maxSize: this.maxSize,
+
+			players: sendPlayers,
+			history: sendHistory,
+		}
+	}
+
 	this.start = function(socket) {
-		this.status = 'PLAYING';
 		this.started = true;
 		this.playerCount = this.players.length;
 		this.currentCount = this.playerCount;
+		this.shufflePolicyDeck();
 
-		this.emit('lobby game', this);
+		this.emit('lobby game', this.gameData());
 	}
 
 	this.getFascistPower = function() {
 		var enacted = this.fascistEnacted;
 		if (enacted == 1) {
-			// return 'bullet'; //SAMPLE
+			// return 'investigate'; //SAMPLE
 			return this.playerCount >= 9 ? 'investigate' : null;
 		}
 		if (enacted == 2) {
@@ -80,8 +146,8 @@ var Game = function(size) {
 				if (this.positionIndex >= this.playerCount) {
 					this.positionIndex = 0;
 				}
-				var player = this.players[this.positionIndex];
-				if (!player.killed) {
+				var player = this.getPlayer(this.positionIndex);
+				if (!player.gameState.killed) {
 					break;
 				}
 			}
@@ -92,7 +158,7 @@ var Game = function(size) {
 
 	this.finish = function() {
 		console.log('FIN', this.gid);
-		this.status = 'FIN';
+		this.finished;
 		//TODO save
 	}
 
@@ -110,11 +176,12 @@ var Game = function(size) {
 				return;
 			}
 			this.power = this.getFascistPower();
-			console.log('enact power:', this.power);
+			// console.log('enact power:', this.power);
 		}
 		if (!this.power) {
 			this.advanceTurn();
 		}
+		return this.power;
 	}
 
 //PLAYERS
@@ -124,109 +191,97 @@ var Game = function(size) {
 
 		var player = socket.player;
 		player.game = this;
+		player.disconnected = false;
 
-		var gamePlayer = this.getPlayerSocket(socket);
-		if (gamePlayer) {
-			gamePlayer.disconnected = false;
-			// player.emitOthers('lobby game', this);
-		} else {
-			player.index = this.players.length;
-			this.players.push({uid: player.uid, name: player.name, index: player.index});
-
-			if (this.isFull()) {
-				this.start();
-			} else {
-				player.emitOthers('lobby game', this);
+		var adding = true;
+		for (var pidx in this.players) {
+			var gp = this.players[pidx];
+			if (gp == player.uid) {
+				adding = false;
+				break;
 			}
+		}
+		if (adding) {
+			player.gameState = {};
+			player.gameState.index = this.players.length;
+			this.players[player.gameState.index] = player.uid;
+		}
+
+		if (this.isFull()) {
+			this.start();
+		} else {
+			this.emit('lobby game', this.gameData());
 		}
 	}
 
-	this.kill = function(gamePlayer) {
-		if (!gamePlayer.killed) {
-			gamePlayer.killed = true;
+	this.kill = function(player) {
+		if (!player.gameState.killed) {
+			player.gameState.killed = true;
 			--this.currentCount;
 		}
 	}
 
 	this.removeSelf = function() {
 		var gid = this.gid;
-		openGames.filter(function(game) {
+		games = games.filter(function(game) {
 			return game.gid != gid;
 		});
 	}
 
-	this.removePlayer = function(socket, permanently) {
+	this.disconnect = function(socket) {
+		if (!this.started || this.finished) {
+			this.remove(socket);
+			return;
+		}
+		var player = socket.player;
+		if (player) {
+			player.disconnected = true;
+		}
+	}
+
+	this.remove = function(socket) {
 		socket.leave(this.gid);
 
-		if (!permanently && !this.started) {
-			permanently = true;
+		var player = socket.player;
+		if (player.gameState.left) {
+			return false;
 		}
-		if (permanently) {
-			var player = socket.player;
-			var uid = player.uid;
-
-			var existingPlayer = this.getPlayer(uid);
-			if (existingPlayer.left) {
-				return false;
-			}
-			if (existingPlayer) {
-				if (this.started) {
-					existingPlayer.left = true;
-					this.kill(existingPlayer);
-					if (this.presidentIndex == existingPlayer.index || this.turn.chancellor == existingPlayer.uid) {
-						this.advanceTurn();
-					}
-				} else {
-					this.players.filter(function(p) {
-						return p.uid != uid;
-					});
-				}
-			}
-			player.game = null;
-			if (this.players.length <= 0) {
-				this.removeSelf()
-				return
+		if (this.started) {
+			player.gameState.left = true;
+			this.kill(player);
+			if (this.presidentIndex == player.gameState.index || this.turn.chancellor == player.uid) {
+				this.advanceTurn();
 			}
 		} else {
-			var player = this.getPlayerSocket(socket);
-			if (player) {
-				player.disconnected = true;
+			this.players = this.players.filter(function(puid) {
+				return puid != player.uid;
+			});
+			if (this.players.length == 0) {
+				this.removeSelf()
 			}
 		}
+		player.game = null;
 		return true;
 	}
 
 //HELPERS
 
-	this.getPlayer = function(uid) {
-		var players = this.players;
-		for (var pidx in players) {
-			var player = players[pidx];
-			if (player.uid == uid) {
-				return player;
-			}
-		}
-	}
-
-	this.getPlayerSocket = function(socket) {
-		return this.getPlayer(socket.player.uid);
-	}
-
-	this.inGame = function(socket) {
-		return this.getPlayerSocket(socket) != null;
-	}
-
-	this.canJoin = function() {
-		return this.status == 'OPEN' && !this.isFull();
+	this.getPlayer = function(index) {
+		return Player.get(this.players[index]);
 	}
 
 	this.isFull = function() {
 		return this.players.length >= this.maxSize;
 	}
 
+	this.isOpen = function() {
+		return !this.started && !this.isFull();
+	}
+
 	this.activeCount = function() {
 		var count = 0;
-		this.players.forEach(function(player) {
+		this.players.forEach(function(puid) {
+			var player = Player.get(puid);
 			if (!player.disconnected) {
 				++count;
 			}
@@ -237,6 +292,6 @@ var Game = function(size) {
 	return this;
 }
 
-Game.openGames = openGames
+Game.games = games;
 
 module.exports = Game;

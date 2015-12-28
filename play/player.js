@@ -2,12 +2,14 @@ var Utils = require.main.require('./tools/utils');
 
 var allPlayers = {};
 
-var Player = function(socket, uid, name) {
+var Player = function(socket, uid, name, oldPlayer) {
 	this.uid = uid;
 	this.name = name;
 
-	this.game = null;
-	this.index = null;
+	if (oldPlayer) {
+		this.game = oldPlayer.game;
+		this.gameState = oldPlayer.gameState;
+	}
 
 	allPlayers[uid] = this;
 
@@ -24,7 +26,7 @@ var Player = function(socket, uid, name) {
 	}
 
 	this.isPresident = function() {
-		return this.index == this.game.presidentIndex;
+		return this.gameState.index == this.game.presidentIndex;
 	}
 
 	this.equals = function(data) {
@@ -32,12 +34,14 @@ var Player = function(socket, uid, name) {
 	}
 
 	this.gamePlayer = function(socket) {
-		return this.game ? this.game.players[this.index] : null;
+		return this.game ? this.game.players[this.gameState.index] : null;
 	}
 
 	return this;
 }
 
-Player.allPlayers = allPlayers;
+Player.get = function(uid) {
+	return allPlayers[uid];
+}
 
 module.exports = Player;

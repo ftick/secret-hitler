@@ -10,10 +10,8 @@ var authenticate = function(socket, uid, auth) {
 			socket.uid = uid;
 			DB.query('UPDATE users SET online_at = '+Utils.seconds()+', online_count = online_count + 1 WHERE id = '+uid, null);
 
-			var player = Player.allPlayers[uid];
-			if (!player) {
-				player = new Player(socket, uid, response.name);
-			}
+			var oldPlayer = Player.get(uid);
+			var player = new Player(socket, uid, response.name, oldPlayer);
 			socket.player = player;
 			socket.emit('auth', response);
 

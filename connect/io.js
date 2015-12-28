@@ -22,7 +22,10 @@ io.on('connection', function(socket) {
 		if (player) {
 			var game = player.game;
 			if (game) {
-				game.removePlayer(socket);
+				game.disconnect(socket);
+			} else {
+				delete socket.player;
+				socket.player = null;
 			}
 		}
 	});
