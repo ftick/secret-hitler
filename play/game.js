@@ -22,8 +22,8 @@ var Game = function(size) {
 
 	this.generator = SeedRandom(this.gid);
 	this.turn = {};
-	this.liberalEnacted = 0;
-	this.fascistEnacted = 0;
+	this.enactedLiberal = 0;
+	this.enactedFascist = 0;
 	this.playerCount;
 	this.currentCount;
 	this.policyDeck;
@@ -52,8 +52,8 @@ var Game = function(size) {
 	this.shufflePolicyDeck = function() {
 		this.policyDeck = [];
 
-		var cardsRemaining = 17 - this.fascistEnacted - this.liberalEnacted;
-		var liberalsRemaining = 6 - this.liberalEnacted;
+		var cardsRemaining = 17 - this.enactedFascist - this.enactedLiberal;
+		var liberalsRemaining = 6 - this.enactedLiberal;
 		for (var i = 0; i < cardsRemaining; ++i) {
 			this.policyDeck[i] = i < liberalsRemaining ? LIBERAL : FASCIST;
 		}
@@ -171,7 +171,7 @@ var Game = function(size) {
 	}
 
 	this.getFascistPower = function() {
-		var enacted = this.fascistEnacted;
+		var enacted = this.enactedFascist;
 		if (enacted == 1) {
 			if (Utils.TESTING) {
 				// return 'bullet'; //SAMPLE
@@ -215,20 +215,20 @@ var Game = function(size) {
 	this.finish = function(liberals, method) {
 		console.log('FIN', this.gid);
 		this.finished = true;
-		DB.update('games', "id = '"+this.gid+"'", {state: 2, finished_at: Utils.now(), history: JSON.stringify(this.history), enacted_liberal: this.liberalEnacted, enacted_fascist: this.fascistEnacted, liberal_victory: liberals, win_method: method});
+		DB.update('games', "id = '"+this.gid+"'", {state: 2, finished_at: Utils.now(), history: JSON.stringify(this.history), enacted_liberal: this.enactedLiberal, enacted_fascist: this.enactedFascist, liberal_victory: liberals, win_method: method});
 		this.removeSelf();
 	}
 
 	this.enact = function(policy) {
 		if (policy == LIBERAL) {
-			++this.liberalEnacted;
-			if (this.liberalEnacted >= LIBERAL_POLICIES_REQUIRED) {
+			++this.enactedLiberal;
+			if (this.enactedLiberal >= LIBERAL_POLICIES_REQUIRED) {
 				this.finish(true, 'policy');
 				return;
 			}
 		} else {
-			++this.fascistEnacted;
-			if (this.fascistEnacted >= FASCIST_POLICIES_REQUIRED) {
+			++this.enactedFascist;
+			if (this.enactedFascist >= FASCIST_POLICIES_REQUIRED) {
 				this.finish(false, 'policy');
 				return;
 			}

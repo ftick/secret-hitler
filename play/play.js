@@ -34,7 +34,7 @@ var chancellorAction = function(data, player, game) {
 	console.log('chancellorAction', data, player.uid, player.gameState.index, game.presidentIndex);
 	if (!player.equals(data) && player.isPresident()) {
 		var hitler = false;
-		if (game.fascistEnacted >= 3 && data.uid == game.hitlerUid) {
+		if (game.enactedFascist >= 3 && data.uid == game.hitlerUid) {
 			hitler = true;
 			game.finish(false, 'hitler');
 		}
