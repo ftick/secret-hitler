@@ -2,10 +2,6 @@ var rng = function(generator) {
 	return generator.int32();
 }
 
-var rngInt = function(generator, max) {
-	return Math.abs(rng(generator)) % (max + 1);
-}
-
 module.exports = {
 
 	TESTING: process.env.DATABASE_URL != null,
@@ -24,13 +20,18 @@ module.exports = {
 
 //RANDOM
 
+	rngInt: function(generator, max) {
+		return Math.abs(rng(generator)) % (max + 1);
+	},
+
 	randomize: function(generator, arr) {
 		var result = [], swapIndex;
+		var Utils = this;
 		arr.forEach(function(val, idx) {
 			if (!idx) {
 				result[0] = val;
 			} else {
-				swapIndex = rngInt(generator, idx);
+				swapIndex = Utils.rngInt(generator, idx);
 				result[idx] = result[swapIndex];
 				result[swapIndex] = val;
 			}

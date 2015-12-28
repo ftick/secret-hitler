@@ -17,6 +17,7 @@ var Game = function(size) {
 	this.maxSize = size;
 	this.players = [];
 	this.history = [];
+	this.startIndex;
 
 	this.generator = SeedRandom(this.gid);
 	this.turn = {};
@@ -26,9 +27,9 @@ var Game = function(size) {
 	this.currentCount;
 	this.policyDeck;
 
-	this.positionIndex = 0;
+	this.positionIndex;
 	this.specialPresident;
-	this.presidentIndex = 0;
+	this.presidentIndex;
 	this.hitlerUid;
 	this.electionTracker = 0;
 
@@ -36,6 +37,10 @@ var Game = function(size) {
 	games.push(this);
 
 //PRIVATE
+
+	this.random = function(max) {
+		return Utils.rngInt(this.generator, max);
+	}
 
 	this.shuffle = function(array) {
 		return Utils.randomize(this.generator, array);
@@ -120,6 +125,7 @@ var Game = function(size) {
 			gid: this.gid,
 			started: this.started,
 			maxSize: this.maxSize,
+			startIndex: this.positionIndex,
 
 			players: sendPlayers,
 			history: sendHistory,
@@ -130,6 +136,9 @@ var Game = function(size) {
 		this.started = true;
 		this.playerCount = this.players.length;
 		this.currentCount = this.playerCount;
+		this.startIndex = this.random(this.playerCount);
+		this.positionIndex = this.startIndex;
+		this.presidentIndex = this.positionIndex;
 		this.shufflePolicyDeck();
 
 		// Assign Fascists
