@@ -29,8 +29,10 @@ var Game = function(size) {
 	this.positionIndex = 0;
 	this.specialPresident;
 	this.presidentIndex = 0;
+	this.hitlerUid;
 	this.electionTracker = 0;
 
+	var game = this;
 	games.push(this);
 
 //PRIVATE
@@ -81,7 +83,6 @@ var Game = function(size) {
 	this.emitAction = function(name, data, secret) {
 		data.action = name;
 		if (secret) {
-			console.log(secret);
 			var target = Player.get(secret.target);
 			target.emitOthers('game action', data);
 			data.secret = secret;
@@ -140,7 +141,11 @@ var Game = function(size) {
 		fascistIndicies = this.shuffle(fascistIndicies);
 		this.players.forEach(function(puid, pidx) {
 			var player = Player.get(puid);
-			player.gameState.allegiance = fascistIndicies[pidx];
+			var allegiance = fascistIndicies[pidx];
+			player.gameState.allegiance = allegiance;
+			if (allegiance == 2) {
+				game.hitlerUid = puid;
+			}
 		});
 
 		// Emit
@@ -261,8 +266,8 @@ var Game = function(size) {
 
 	this.removeSelf = function() {
 		var gid = this.gid;
-		games = games.filter(function(game) {
-			return game.gid != gid;
+		games = games.filter(function(g) {
+			return g.gid != gid;
 		});
 	}
 

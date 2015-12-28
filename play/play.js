@@ -11,7 +11,7 @@ var chatAction = function(data, player) {
 var quitAction = function(data, player, game, socket) {
 	if (!player.gameState.left) {
 		if (game.remove(socket)) {
-			return game.emitAction('abandoned', {uid: player.uid});
+			return game.emitAction('abandoned', {uid: player.uid, hitler: player.uid == game.hitlerUid});
 		}
 	}
 }
@@ -27,9 +27,14 @@ var chancellorAction = function(data, player, game) {
 		console.log('Player involved in the last election', data.uid, game.presidentElect, game.chancellorElect);
 		return
 	}
-	console.log('chancellorAction', data, player.uid)
+	console.log('chancellorAction', data, player.uid, player.gameState.index, game.presidentIndex);
 	if (!player.equals(data) && player.isPresident()) {
-		var chancellorData = {president: player.uid, chancellor: data.uid};
+		var hitler = false;
+		if (game.fascistEnacted >= 3 && data.uid == game.hitlerUid) {
+			hitler = true;
+			game.finish();
+		}
+		var chancellorData = {president: player.uid, chancellor: data.uid, hitler: hitler};
 		chancellorData = player.emitAction('chancellor chosen', chancellorData);
 		game.turn.chancellor = data.uid;
 		return chancellorData;
@@ -159,6 +164,7 @@ var powerAction = function(action, data, player, game) {
 					return;
 				}
 				game.kill(target);
+				data.hitler = target.uid == game.hitlerUid;
 				data = game.emitAction('killed', data);
 			}
 		}
