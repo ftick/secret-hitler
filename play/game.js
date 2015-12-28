@@ -86,16 +86,28 @@ var Game = function(size) {
 		return data;
 	}
 
-	this.gameData = function() {
+	this.gameData = function(perspectiveUid) {
 		var sendHistory = this.history;
 		var sendPlayers = [];
+		var showFascists;
+		if (perspectiveUid) {
+			var perspectiveAllegiance = Player.get(perspectiveUid).gameState.allegiance;
+			showFascists = perspectiveAllegiance == 1 || (perspectiveAllegiance == 2 && this.playerCount <= 6)
+		}
 		this.players.forEach(function(uid, index) {
 			var player = Player.get(uid);
-			sendPlayers[index] = {
+			var playerData = {
 				uid: uid,
 				name: player.name,
 				index: index,
 			};
+			if (perspectiveUid) {
+				var playerAllegiance = player.gameState.allegiance;
+				if (perspectiveUid == uid || (showFascists && playerAllegiance > 0)) {
+					playerData.allegiance = playerAllegiance;
+				}
+			}
+			sendPlayers[index] = playerData;
 		});
 		return {
 			gid: this.gid,
@@ -113,7 +125,23 @@ var Game = function(size) {
 		this.currentCount = this.playerCount;
 		this.shufflePolicyDeck();
 
-		this.emit('lobby game', this.gameData());
+		// Assign Fascists
+		var facistsCount = Math.ceil(this.playerCount / 2) - 1
+		var fascistIndicies = [2];
+		for (var i = 1; i < this.playerCount; ++i) {
+			fascistIndicies[i] = i < facistsCount ? 1 : 0;
+		}
+		fascistIndicies = Utils.randomize(fascistIndicies);
+		this.players.forEach(function(puid, pidx) {
+			var player = Player.get(puid);
+			player.gameState.allegiance = fascistIndicies[pidx];
+		});
+
+		// Emit
+		this.players.forEach(function(puid) {
+			var player = Player.get(puid);
+			player.emitStart();
+		});
 	}
 
 	this.getFascistPower = function() {
@@ -208,7 +236,11 @@ var Game = function(size) {
 		}
 
 		if (this.isFull()) {
-			this.start();
+			if (this.started) {
+				player.emitStart();
+			} else {
+				this.start();
+			}
 		} else {
 			this.emit('lobby game', this.gameData());
 		}

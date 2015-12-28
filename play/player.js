@@ -13,8 +13,14 @@ var Player = function(socket, uid, name, oldPlayer) {
 
 	allPlayers[uid] = this;
 
+	// Public
+
 	this.emit = function(name, data) {
 		socket.emit(name, data);
+	}
+
+	this.emitStart = function() {
+		socket.emit('lobby game', this.game.gameData(this.uid));
 	}
 
 	this.emitOthers = function(name, data) {
@@ -35,6 +41,10 @@ var Player = function(socket, uid, name, oldPlayer) {
 
 	this.gamePlayer = function(socket) {
 		return this.game ? this.game.players[this.gameState.index] : null;
+	}
+
+	this.getRole = function(socket) {
+		return this.gameState.allegiance == 0 ? 0 : 1;
 	}
 
 	return this;
