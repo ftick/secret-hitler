@@ -43,7 +43,7 @@ var Player = function(socket, uid, name, oldPlayer) {
 		return this.game ? this.game.players[this.gameState.index] : null;
 	}
 
-	this.getRole = function(socket) {
+	this.getParty = function(socket) {
 		return this.gameState.allegiance == 0 ? 0 : 1;
 	}
 
