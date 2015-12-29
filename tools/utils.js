@@ -4,7 +4,7 @@ var rng = function(generator) {
 
 module.exports = {
 
-	TESTING: process.env.DATABASE_URL != null,
+	TESTING: process.env.DATABASE_URL == null,
 
 	now: function() {
 		return Math.round(Date.now() * 0.001);
