@@ -90,6 +90,14 @@ var Game = function(size) {
 
 	this.emitAction = function(name, data, secret) {
 		data.action = name;
+		if (this.finished) {
+			var roles = [];
+			this.players.forEach(function(uid, index) {
+				var player = Player.get(uid);
+				roles[index] = player.gameState.allegiance;
+			});
+			data.roles = roles;
+		}
 		if (secret) {
 			var target = Player.get(secret.target);
 			target.emitOthers('game action', data);
