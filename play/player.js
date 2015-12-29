@@ -31,10 +31,6 @@ var Player = function(socket, uid, name, oldPlayer) {
 		return this.game.emitAction(name, data);
 	}
 
-	this.isPresident = function() {
-		return this.gameState.index == this.game.presidentIndex;
-	}
-
 	this.equals = function(data) {
 		return this.uid == data.uid;
 	}
@@ -45,6 +41,14 @@ var Player = function(socket, uid, name, oldPlayer) {
 
 	this.getParty = function(socket) {
 		return this.gameState.allegiance == 0 ? 0 : 1;
+	}
+
+	this.isPresident = function() {
+		return this.gameState.index == this.game.presidentIndex;
+	}
+
+	this.isChancellor = function() {
+		return this.uid == this.game.turn.chancellor;
 	}
 
 	return this;

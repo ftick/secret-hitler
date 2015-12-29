@@ -192,6 +192,9 @@ var Game = function(size) {
 //STATE
 
 	this.advanceTurn = function() {
+		if (this.finished) {
+			return;
+		}
 		this.turn = {};
 		if (this.specialPresident != null) {
 			this.presidentIndex = this.specialPresident;
@@ -206,10 +209,25 @@ var Game = function(size) {
 				if (!player.gameState.killed) {
 					break;
 				}
+				console.log('Skipping killed player', this.positionIndex, this.playerCount);
 			}
 			this.presidentIndex = this.positionIndex;
 		}
 		this.power = null;
+	}
+
+	this.failedElection = function() {
+		++this.electionTracker;
+		var forced;
+		if (this.electionTracker >= 3) {
+			this.electionTracker = 0;
+			this.presidentElect = null;
+			this.chancellorElect = null;
+			forced = this.getTopPolicy();
+			this.enact(forced);
+		}
+		this.advanceTurn();
+		return forced;
 	}
 
 	this.finish = function(liberals, method) {
@@ -220,6 +238,7 @@ var Game = function(size) {
 	}
 
 	this.enact = function(policy) {
+		game.electionTracker = 0;
 		if (policy == LIBERAL) {
 			++this.enactedLiberal;
 			if (this.enactedLiberal >= LIBERAL_POLICIES_REQUIRED) {
@@ -233,7 +252,7 @@ var Game = function(size) {
 				return;
 			}
 			this.power = this.getFascistPower();
-			// console.log('enact power:', this.power);
+			console.log('enact power:', this.power);
 		}
 		if (!this.power) {
 			this.advanceTurn();
@@ -313,9 +332,6 @@ var Game = function(size) {
 		if (this.started) {
 			player.gameState.left = true;
 			this.kill(player);
-			if (this.presidentIndex == player.gameState.index || this.turn.chancellor == player.uid) {
-				this.advanceTurn();
-			}
 		} else {
 			this.players = this.players.filter(function(puid) {
 				return puid != player.uid;
@@ -351,6 +367,10 @@ var Game = function(size) {
 			}
 		});
 		return count;
+	}
+
+	this.canVeto = function() {
+		return this.enactedFascist >= (Utils.TESTING ? 1 : FASCIST_POLICIES_REQUIRED - 1);
 	}
 
 	return this;
