@@ -24,11 +24,11 @@ var quitAction = function(data, player, game, socket) {
 
 var chancellorAction = function(data, player, game) {
 	if (game.turn.chancellor) {
-		console.log('Chancellor already chosen for ' + player.uid);
+		console.error('Chancellor already chosen for ' + player.uid);
 		return;
 	}
 	if (data.uid == game.chancellorElect || (game.playerCount > 5 && data.uid == game.presidentElect)) {
-		console.log('Player involved in the last election', data.uid, game.presidentElect, game.chancellorElect);
+		console.error('Player involved in the last election', data.uid, game.presidentElect, game.chancellorElect);
 		return
 	}
 	console.log('chancellorAction', data, player.uid, player.gameState.index, game.presidentIndex);
@@ -47,7 +47,7 @@ var chancellorAction = function(data, player, game) {
 
 var voteAction = function(data, player, game) {
 	if (game.turn.voted) {
-		console.log('vote already complete');
+		console.error('vote already complete');
 		return;
 	}
 	if (player.gameState.killed) {
@@ -124,7 +124,7 @@ var policyAction = function(data, player, game) {
 			return data;
 		}
 	} else {
-		console.log('Invalid policy action', player.uid, data);
+		console.error('Invalid policy action', player.uid, data);
 	}
 }
 

@@ -13,7 +13,7 @@ var connectURL = process.env.DATABASE_URL || 'postgres://kiko@localhost/secrethi
 var query = function(statement, params, callback) {
 	Postgres.connect(connectURL, function(err, client, done) {
 		if (!client) {
-			console.log('CLIENT CONNECTION ERROR');
+			console.error('CLIENT CONNECTION ERROR');
 			console.log(err, client, done);
 			done();
 			return;
@@ -25,7 +25,7 @@ var query = function(statement, params, callback) {
 					callback(result.rows);
 				}
 			} else {
-				console.log('QUERY ERROR');
+				console.error('QUERY ERROR');
 				console.log(statement, params);
 				console.log(err);
 			}
