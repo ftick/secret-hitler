@@ -43,12 +43,7 @@ var chancellorAction = function(data, player, game) {
 	}
 	// console.log('chancellorAction', player.uid, data, player.gameState.index, game.presidentIndex);
 	if (!player.equals(data) && player.isPresident()) {
-		var hitler = false;
-		if (game.enactedFascist >= 3 && data.uid == game.hitlerUid) {
-			hitler = true;
-			game.finish(false, 'hitler');
-		}
-		var chancellorData = {president: player.uid, chancellor: data.uid, hitler: hitler};
+		var chancellorData = {president: player.uid, chancellor: data.uid};
 		chancellorData = player.emitAction('chancellor chosen', chancellorData);
 		game.turn.chancellor = data.uid;
 		return chancellorData;
@@ -86,17 +81,22 @@ var voteAction = function(data, player, game) {
 			delete gp.gameState.vote;
 		});
 		var elected = supportCount > Math.floor(game.currentCount / 2);
-		var forced, secret;
+		var forced, secret, isHitler;
 		if (elected) {
 			game.presidentElect = game.players[game.presidentIndex];
 			game.chancellorElect = game.turn.chancellor;
 
 			game.turn.policies = game.getTopPolicies();
 			secret = {target: game.presidentElect, policies: game.turn.policies};
+
+			if (game.enactedFascist >= 3 && game.chancellorElect == game.hitlerUid) {
+				isHitler = true;
+				game.finish(false, 'hitler');
+			}
 		} else {
 			forced = game.failedElection();
 		}
-		var voteData = {supporters: supporters, elected: elected, forced: forced};
+		var voteData = {supporters: supporters, elected: elected, forced: forced, hitler: isHitler};
 		voteData = game.emitAction('voted', voteData, secret);
 		return voteData;
 	}
