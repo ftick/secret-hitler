@@ -10,7 +10,7 @@ var joinAvailableGame = function(socket) {
 	if (oldGame && !oldGame.finished) {
 		joiningGame = oldGame;
 	} else {
-		var games = Game.games;
+		var games = Game.games();
 		for (var gidx in games) {
 			var game = games[gidx];
 			if (game.isOpen()) {

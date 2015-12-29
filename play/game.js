@@ -356,6 +356,8 @@ var Game = function(size) {
 	return this;
 }
 
-Game.games = games;
+Game.games = function(argument) {
+	return games;
+}
 
 module.exports = Game;
