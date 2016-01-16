@@ -1,9 +1,14 @@
 {
   "name": "secret-hitler",
   "version": "1.0.0",
-  "description": "Online implementation of Max Temkin & co.'s game \"Secret Hitler\"",
+  "description": "Online implementation of Max Temkin, Tommy Maranges, Mike Boxleiter & Mackenzie Schubert's tabletop game 'Secret Hitler'",
   "main": "server.js",
   "scripts": {},
   "author": "kyis",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3",
+    "seedrandom": "^2.4.2",
+    "socket.io": "^1.4.4"
+  }
 }
