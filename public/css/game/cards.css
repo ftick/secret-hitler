@@ -1,0 +1,61 @@
+.card {
+	border-radius: 3px;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+#player-cards {
+	position: fixed;
+	bottom: 44px;
+	left: 0;
+	right: 0;
+	text-align: center;
+	z-index: 900;
+}
+
+#player-cards .card {
+	position: relative;
+	bottom: -96px;
+	padding-top: 24px;
+	display: inline-block;
+	width: 192px;
+	height: 192px;
+
+	margin: 0 4px;
+	border: 1px dashed rgba(0,0,0, 0.1);	
+
+	max-width: 45%;
+	background-color: #F7E2C0;
+	box-shadow: 0px 8px 16px rgba(0,0,0, 0.75);
+}
+
+#player-cards .description {
+	font-size: 0.75em;
+}
+
+#player-cards .policy {
+	width: 128px;
+	font-size: 1.4em;
+	background-size: contain;
+}
+div.policy {
+	border-radius: 12%/9%;
+}
+
+#cards-vote .card, #player-cards .policy {
+	cursor: pointer;	
+}
+
+.card.selected {
+	bottom: -46px !important;
+	z-index: 9000;
+}
+
+#veto-request span {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin-top: 16px;
+}

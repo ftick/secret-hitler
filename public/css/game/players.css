@@ -1,0 +1,79 @@
+#players {
+	width: 100%;
+	min-height: 100%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	overflow: scroll;
+}
+
+.player-slot {
+	box-sizing: border-box;
+	width: 50%;
+	padding: 16px;
+}
+
+.player-slot.choose {
+	border: 1px dashed #FFD556;
+	background-color: rgba(255,255,255, 0.5);
+	cursor: pointer;
+}
+.player-slot.choose:hover {
+	border-style: solid;
+	background-color: rgba(255,255,255, 0.25);
+}
+
+.player-slot.elect .avatar {
+	box-shadow: 0px 0px 32px #FFD556;
+}
+
+.player-slot .details {
+	float: inherit;
+}
+
+.player-slot h2 {
+	font-weight: 300;
+	margin: 0 8px;
+	display: inline;
+}
+.player-slot .chat {
+	margin: 4px 8px;
+	font-style: italic;
+}
+
+.player-slot.killed {
+	opacity: 0.5;
+	background-color: #E3644F;
+}
+
+/* AVATARS */
+
+.avatar {
+	position: relative;
+	box-sizing: border-box;
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	border: 2px solid #F7E2C0;
+
+	background-image: url(/image/unknown.png);
+	background-size: cover;
+}
+
+.avatar .vote {
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+	right: 0;
+	border: 1px solid #383633;
+	text-align: center;
+	background-color: #F7E2C0;
+}
+
+@media (max-width: 719px) {
+	.player-slot {
+		width: 100%;
+	}
+}

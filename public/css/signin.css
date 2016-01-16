@@ -1,0 +1,13 @@
+#s-signin {
+	text-align: center;
+}
+
+#s-signin input {
+	font-family: inherit;
+	text-align: center;
+	font-size: 2em;
+	font-weight: 300;
+	padding: 8px 4px;
+	width: 480px;
+	max-width: 100%;
+}

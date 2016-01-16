@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+	<title>Secret Hitler</title>
+	<meta charset="utf-8"/>
+ 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+
+	<link href="css/main.css" rel="stylesheet" type="text/css"/>
+	<link href="css/signin.css" rel="stylesheet" type="text/css"/>
+	<link href="css/lobby.css" rel="stylesheet" type="text/css"/>
+	<link href="css/game/game.css" rel="stylesheet" type="text/css"/>
+	<link href="css/game/overlay.css" rel="stylesheet" type="text/css"/>
+	<link href="css/game/players.css" rel="stylesheet" type="text/css"/>
+	<link href="css/game/board.css" rel="stylesheet" type="text/css"/>
+	<link href="css/game/cards.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+
+<section id="s-signin" style="display: none;">
+	<h1>Secret&nbsp;Hitler Online</h1>
+	<div id="signin-start" class="sd-signin">
+		<button id="guest-login" class="large">Login as Guest</button>
+		<h3>or enter your email to begin</h3>
+		<input class="full input-signin" id="i-signin-email" type="email" placeholder="example@email.com" /> <div class="input-error mini"></div>
+	</div>
+	<div id="signin-confirm" class="sd-signin">
+		<h2>Welcome back, <span class="signin-email-address">a@a.a</span>!</h2>
+		<h3 class="faint">Wrong email? <button class="signin-restart large">try again</button></h3>
+
+		<input class="full input-signin" id="i-signin-passkey" type="numeric" placeholder="6-digit passkey" value="111111" maxlength="6" /> <div class="input-error mini"></div>
+		<h3 class="faint">Emails not yet enabled, please hit enter to continue</h3>
+	</div>
+	<div id="signin-register" class="sd-signin">
+		<h2>Welcome, <span class="signin-email-address">a@a.a</span>!</h2>
+		<h3 class="faint">Wrong email? <button class="signin-restart large">try again</button></h3>
+
+		<input class="full input-signin" id="i-signin-name" type="ascii" placeholder="username" maxlength="12" /> <div class="input-error mini"></div>
+		<h3 class="faint">Provide 3 - 12 letters, numbers, and underscores</h3>
+		<h3 class="faint">Prefer your Twitch chat name if possible</h3>
+	</div>
+</section>
+
+<section id="s-lobby" style="display: none;">
+	<h1>Waiting for game</h1>
+	<h2 id="lobby-player-summary">? of ? players</h2>
+	<div id="lobby-players"></div>
+</section>
+
+<section id="s-game" style="display: none;">
+	<div id="game-mat">
+		<div id="players">
+		</div>
+
+		<div id="board-container">
+			<div id="board">
+				<div id="board-policy-piles" class="board-component">
+					<div id="pile-draw" class="policy-placeholder card-pile card draw">
+						<div class="pile-cards policy"></div>
+						<div class="pile-label">DRAW</div>
+					</div>
+
+					<div id="election-tracker">
+						<div id="tracker-title">ELECTION TRACKER</div>
+						<div class="tracker-slot"></div>
+						<div class="tracker-slot"></div>
+						<div class="tracker-slot"></div>
+						<div id="tracker-description">3rd failed election:<br>reveal and pass top policy</div>
+					</div>
+
+					<div id="pile-discard" class="policy-placeholder card-pile card discard">
+						<div class="pile-cards policy"></div>
+						<div class="pile-label">DISCARD</div>
+					</div>
+				</div>
+				<div id="board-fascist" class="board-component fascist">
+					<div class="policy-placeholder card fascist"></div>
+					<div class="policy-placeholder card fascist"></div>
+					<div class="policy-placeholder card fascist"></div>
+					<div class="policy-placeholder card fascist danger"></div>
+					<div class="policy-placeholder card fascist danger"></div>
+					<div class="policy-placeholder card fascist danger victory"></div>
+				</div>
+				<div id="board-liberal" class="board-component liberal">
+					<div class="policy-placeholder card liberal"></div>
+					<div class="policy-placeholder card liberal"></div>
+					<div class="policy-placeholder card liberal"></div>
+					<div class="policy-placeholder card liberal"></div>
+					<div class="policy-placeholder card liberal danger victory"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="player-cards">
+		<span id="cards-position">
+			<div id="card-president" class="card" style="display:none;">President</div>
+			<div id="card-chancellor" class="card" style="display:none;">Chancellor</div>
+		</span>
+
+		<span id="cards-role">
+			<div id="card-role" class="card">
+				<div class="description">
+					Your secret role:
+				</div>
+				<h3 class="label"></h3>
+			</div>
+			<div id="card-party" class="card">
+				<div class="description">
+					Your party affiliation:
+				</div>
+				<h3 class="label"></h3>
+			</div>
+		</span>
+
+		<span id="cards-vote">
+			<div id="card-ja" class="card">
+				<h2>Ja!</h2>
+			</div>
+			<div id="card-nein" class="card">
+				<h2>Nein!</h2>
+			</div>
+		</span>
+
+		<span id="cards-veto">
+			<div id="veto-approve" class="card policy veto" data-veto="true">Approve Veto</div>
+			<div id="veto-override" class="card policy veto" data-veto="false">Override Veto</div>
+		</span>
+
+		<span id="cards-policy">
+			<div class="card policy image" data-index="0"></div>
+			<div class="card policy image" data-index="1"></div>
+			<div class="card policy image" data-index="2"></div>
+			<div id="veto-request" class="card policy veto" data-veto="true"><span>Request Veto</span></div>
+		</span>
+
+		<span id="cards-options">
+			<div id="card-call-vote" class="card">Call for a Vote</div>
+		</span>
+	</div>
+
+	<div id="directive">
+	</div>
+
+	<div id="chat-box">
+		<input id="i-chat" type="text" placeholder="💬" />
+		<div id="menu-button"></div>
+	</div>
+
+	<div id="overlay" style="display: none;">
+		<div id="overlay-chat">
+		</div>
+		<div id="overlay-info">
+			<div class="extras"></div>
+			<div class="detail"></div>
+		</div>
+		<div id="overlay-menu">
+			<p id="version">
+				Secret&nbsp;Hitler Online v0.1β
+			</p>
+			<button id="menu-quit" class="large">quit</button>
+			<hr />
+			<button id="menu-cancel" class="large">cancel</button>
+			<p>
+				<h4>Game design</h4>
+				Tommy Maranges
+				<br>
+				Mike Boxleiter
+				<br>
+				Max Temkin
+				<h4>Graphic design</h4>
+				Mackenzie Schubert
+				<h4>Online adaptation</h4>
+				Kyle Coburn
+			</p>
+		</div>
+	</div>
+</section>
+
+	<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+	<script src="//cdn.socket.io/socket.io-1.4.3.js"></script>
+
+	<script src="js/util/config.js"></script>
+	<script src="js/util/util.js"></script>
+	<script src="js/util/socket.js"></script>
+
+	<script src="js/lobby/signin.js"></script>
+	<script src="js/lobby/lobby.js"></script>
+
+	<script src="js/game/start.js"></script>
+	<script src="js/game/game.js"></script>
+	<script src="js/game/action.js"></script>
+	<script src="js/game/overlay.js"></script>
+	<script src="js/game/cards.js"></script>
+	<script src="js/game/policies.js"></script>
+	<script src="js/game/players.js"></script>
+	<script src="js/game/chat.js"></script>
+</body>
+
+</html>
