@@ -1,1 +1,1 @@
-var TESTING = true;
+var TESTING = document.location.hostname == 'localhost';
