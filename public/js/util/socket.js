@@ -12,11 +12,9 @@ socket.on('connect', function(data) {
 	if (!uid || !auth) {
 		showSignin();
 	}
-	console.log('connect', uid);
 });
 
 socket.on('auth', function(data) {
-	console.log('auth', data);
 	if (data.invalid) {
 		showSignin();
 	} else {

@@ -20,7 +20,6 @@ var showSignin = function() {
 		setTimeout(function() {
 			$('#guest-login').click();
 		}, 100);
-// 		return;
 	}
 }
 
