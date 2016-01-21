@@ -11,3 +11,13 @@
 	width: 480px;
 	max-width: 100%;
 }
+
+#s-signin h2 {
+	font-weight: 400;
+	font-size: 1.5em;
+}
+
+#s-signin h3 {
+	font-weight: 300;
+	font-size: 1.2em;
+}

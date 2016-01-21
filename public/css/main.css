@@ -17,7 +17,7 @@ body {
 	width: inherit;
 	height: inherit;
 	background-color: #eaeae5;
-	font-family: system-font, -webkit-system-font, -apple-system-font, 'Helvetica Neue', HelveticaNeue, Helvetica, sans-serif;
+	font-family: system-font, -webkit-system-font, 'Helvetica Neue', Helvetica, sans-serif;
 
 	font-weight: 300;
 	-webkit-touch-callout: none;
@@ -63,4 +63,8 @@ section {
 	width: inherit;
 	height: inherit;
 	overflow: hidden;
+}
+
+.faint {
+	color: #666;
 }
