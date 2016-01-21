@@ -1,5 +1,6 @@
 var Utils = require.main.require('./tools/utils');
 var DB = require.main.require('./tools/db');
+var Mailer = require.main.require('./tools/mailer');
 
 var Lobby = require('./lobby');
 var Player = require.main.require('./play/player');
@@ -62,10 +63,9 @@ module.exports = function(socket, uid, auth) {
 				}
 				if (!key) {
 					key = Utils.code();
-					key = '111111'; //TODO testing
 					DB.update('users', 'id = '+userData.id, {passcode: key, passcode_time: now}, null, function() {
 						console.log('Set signin key', userData.name, key);
-						// Email.sendPasskey(userData.name, userData.email, key);
+						Mailer.sendPasskey(userData.name, userData.email, key);
 					});
 				}
 				callback({signin: true, email: email});
