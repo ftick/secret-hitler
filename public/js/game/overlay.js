@@ -2,7 +2,7 @@ var hideOverlay = function() {
 	$('#game-mat').removeClass('overlay');
 	$('#overlay').fadeOut();	
 	hideCards('role');
-}
+};
 
 var showOverlay = function(type, data) {
 	var showMenu = type == 'menu';
@@ -48,7 +48,7 @@ var showOverlay = function(type, data) {
 			inner += winName+' enacted '+winCount+' '+winName+' policies';
 		} else if (data.method == 'hitler') {
 			if (data.liberals) {
-				inner += 'The Liberals successfully found and killed Hitler'
+				inner += 'The Liberals successfully found and killed Hitler';
 			} else {
 				inner += 'The Fascists elected Hitler as Chancellor after the '+enactedFascist+' policy';
 			}
@@ -61,7 +61,7 @@ var showOverlay = function(type, data) {
 	inner += '<button id="overlay-continue" class="large" data-type="'+type+'">continue</button>';
 	$('#overlay .detail').html(inner);
 	$('#overlay .extras').html(extras);
-}
+};
 
 $('#overlay').on('click', '#overlay-continue', function() {
 	var type = $(this).data('type');

@@ -21,7 +21,7 @@ var authenticate = function(socket, uid, auth) {
 			socket.emit('auth', {invalid: true});
 		}
 	});
-}
+};
 
 module.exports = function(socket, uid, auth) {
 	if (uid && auth) {
@@ -35,7 +35,7 @@ module.exports = function(socket, uid, auth) {
 			var insertCallback = function(response) {
 				authenticate(socket, response.id, response.auth_key);
 				callback(response);
-			}
+			};
 			if (userData) {
 				insertCallback(userData);
 			} else {
@@ -118,7 +118,7 @@ module.exports = function(socket, uid, auth) {
 				var insertCallback = function(response) {
 					authenticate(socket, response.id, response.auth_key);
 					callback(response);
-				}
+				};
 				console.log('Registered', userData.id, username, email);
 				if (replace) {
 					DB.update('users', 'id = '+userData.id, userBegin, returnForSignin, insertCallback);
@@ -129,4 +129,4 @@ module.exports = function(socket, uid, auth) {
 		});
 	});
 
-}
+};

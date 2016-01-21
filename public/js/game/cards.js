@@ -1,6 +1,6 @@
 var hideCards = function(hideName) {
 	$('#cards-'+hideName).hide();
-}
+};
 
 var showCards = function(showName) {
 	$('#player-cards > span').hide();
@@ -11,7 +11,7 @@ var showCards = function(showName) {
 	} else if (showName == 'policy') {
 		$('#veto-request').toggle(localChancellor() && canVeto());
 	}
-}
+};
 
 var setPosition = function(position) {
 	$('#cards-position').toggle(position != null);
@@ -19,7 +19,7 @@ var setPosition = function(position) {
 		$('#cards-position > div').hide();
 		$('#card-'+position).show();
 	}
-}
+};
 
 //EVENTS
 

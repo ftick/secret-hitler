@@ -15,10 +15,10 @@ var enactPolicy = function(type) {
 		}
 	}
 	var slot = $('#board-'+type+' .policy-placeholder').eq(enacted - 1);
-	slot.html('<div class="policy image '+type+'"></div')
+	slot.html('<div class="policy image '+type+'"></div');
 
 	return slot.data('power');
-}
+};
 
 var updatePolicyChoices = function(policies) {
 	$('#cards-policy .card').each(function(index, card) {
@@ -30,7 +30,7 @@ var updatePolicyChoices = function(policies) {
 			$(this).toggleClass(FASCIST, policyType == FASCIST);
 		}
 	});
-}
+};
 
 var policyDiscarded = function(data) {
 	var directive, cards;
@@ -48,7 +48,7 @@ var policyDiscarded = function(data) {
 	setDirective(directive);
 	showCards(cards);
 	discardPolicyCards(1);
-}
+};
 
 var policyEnacted = function(data) {
 	discardPolicyCards(1);
@@ -95,7 +95,7 @@ var policyEnacted = function(data) {
 	} else {
 		advanceTurn();	
 	}
-}
+};
 
 //POWERS
 
@@ -112,12 +112,12 @@ var getFascistPowers = function() {
 	}
 // 	fascistPowers[0] = 'bullet'; //SAMPLE
 	return fascistPowers;
-}
+};
 
 var completePower = function() {
 	showCards(null);
 	advanceTurn();
-}
+};
 
 //VETO
 
@@ -138,16 +138,16 @@ var vetoRequest = function(data) {
 	}
 	setDirective(directive);
 	showCards(cards);
-}
+};
 
 var vetoPolicy = function(data) {
 	failedGovernment(data.forced, 'Election vetoed');
-}
+};
 
 var vetoOverridden = function(data) {
 	setDirective('Veto overridden, enacting by force');
 	policyEnacted(data);
-}
+};
 
 //SELECTION
 
@@ -164,31 +164,31 @@ var previewPolicies = function(secret) {
 	}
 	setDirective(directive);
 	showCards(cards);
-}
+};
 
 var returnPreviewedPolicies = function() {
 	drawPolicyCards(-3, true);
-}
+};
 
 var shufflePolicyCards = function() {
 	var deckSize = 17 - enactedFascist - enactedLiberal;
 	$('#pile-draw .pile-cards').show().text(deckSize);
 	$('#pile-discard .pile-cards').hide().text('0');
-}
+};
 
 var checkRemainingPolicies = function(count, preview) {
 	var remainingPolicies = parseInt($('#pile-draw .pile-cards').text());
 	if (remainingPolicies < 3) {
 		shufflePolicyCards();
 	}
-}
+};
 
 var drawPolicyCards = function(count, preview) {
 	var startCount = parseInt($('#pile-draw .pile-cards').text());
 	$('#pile-draw .pile-cards').show().text(startCount - count);
-}
+};
 
 var discardPolicyCards = function(count) {
 	var startCount = parseInt($('#pile-discard .pile-cards').text());
 	$('#pile-discard .pile-cards').show().text(startCount + count);
-}
+};

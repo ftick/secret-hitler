@@ -7,32 +7,31 @@ var getPlayer = function(uid) {
 			return player;
 		}
 	}
-}
+};
 
 var uidDiv = function(uid, query) {
 	return $('#ps'+uid + (query ? ' '+query :''));
-}
+};
 
 var dataDiv = function(data, query) {
 	return uidDiv(data.uid, query);
-}
+};
 
 var playerDiv = function(player, query) {
 	return uidDiv(player.uid, query);
-}
+};
 
 var localDiv = function(query) {
 	return playerDiv(localPlayer, query);
-}
+};
 
 var localRole = function() {
 	return localAllegiance == 0 ? 'Liberal' : (localAllegiance == 1 ? 'Fascist' : 'Hitler');
-}
+};
 
 var localParty = function() {
 	return localAllegiance > 0 ? 'Fascist' : 'Liberal';
-}
-
+};
 
 //SELECTION
 
@@ -47,17 +46,17 @@ var allegianceClass = function(allegiance) {
 		}
 	}
 	return ac;
-}
+};
 
 var displayAvatar = function(player, allegiance) {
 	playerDiv(player, '.avatar').addClass(allegianceClass(allegiance));
-}
+};
 
 var revealRoles = function(roles) {
 	roles.forEach(function(allegiance, index) {
 		displayAvatar(players[index], allegiance);
 	});
-}
+};
 
 var enablePlayerSelection = function(purpose) {
 	var isLocalPresident = localPresident();
@@ -84,7 +83,7 @@ var enablePlayerSelection = function(purpose) {
 			});
 		}
 	}
-}
+};
 
 var killPlayer = function(player, hitler, quit) {
 	$('.player-slot').removeClass('choose');
@@ -93,7 +92,7 @@ var killPlayer = function(player, hitler, quit) {
 	if (hitler) {
 		endGame(true, quit ? 'hitler quit' : 'hitler');
 	}
-}
+};
 
 var abandonedPlayer = function(data) {
 	var player = getPlayer(data.uid);
@@ -103,7 +102,7 @@ var abandonedPlayer = function(data) {
 	if (data.advance) {
 		advanceTurn();
 	}
-}
+};
 
 //EVENTS
 
@@ -125,7 +124,6 @@ var chancellorChosen = function(data) {
 	chancellorIndex = chancellor.index;
 	localElective = uid == data.president || uid == data.chancellor;
 
-
 	$('.player-slot').removeClass('choose').removeClass('elect');
 	playerDiv(president).addClass('elect');
 	playerDiv(chancellor).addClass('elect');
@@ -140,4 +138,4 @@ var chancellorChosen = function(data) {
 	}
 	setDirective(directive + ' on President <strong>'+president.name+'</strong> and Chancellor <strong>'+chancellor.name+'</strong>');
 	showCards(cards);
-}
+};

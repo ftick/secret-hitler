@@ -32,7 +32,7 @@ var query = function(statement, params, callback) {
 			}
 		});
 	});
-}
+};
 
 var queryOne = function(statement, params, callback) {
 	query(statement, params, function(result) {
@@ -40,17 +40,17 @@ var queryOne = function(statement, params, callback) {
 			callback(result[0]);
 		}
 	});
-}
+};
 
 var fetch = function(columns, table, where, params, callback) {
 	queryOne('SELECT ' + columns + ' FROM ' + table + ' WHERE ' + where + ' LIMIT 1', params, callback);
-}
+};
 
 var property = function(column, table, where, params, callback) {
 	fetch(column, table, where, params, function(result) {
 		callback(result[column]);
 	});
-}
+};
 
 // UPSERT
 
@@ -67,7 +67,7 @@ var update = function(table, where, columnsValues, returning, callback) {
 	var queryString = 'UPDATE ' + table + ' SET (' + columns.join() + ') = (' + placeholders.join() + ') WHERE ' + where;
 	queryString += ' RETURNING ' + (returning || 1);
 	queryOne(queryString, values, callback);
-}
+};
 
 var insert = function(table, columnsValues, returning, callback) {
 	var now = Utils.now();
@@ -87,7 +87,7 @@ var insert = function(table, columnsValues, returning, callback) {
 
 	queryString += ' RETURNING ' + (returning || 1);
 	queryOne(queryString, values, callback);
-}
+};
 
 // PUBLIC
 
@@ -121,4 +121,4 @@ module.exports = {
 		});
 	},
 
-}
+};

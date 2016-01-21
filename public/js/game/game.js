@@ -1,5 +1,3 @@
-'use strict';
-
 var LIBERAL = 'liberal';
 var FASCIST = 'fascist';
 var NONE = 'none';
@@ -8,25 +6,25 @@ var showGame = function() {
 	$('#s-signin').hide();
 	$('#s-lobby').hide();
 	$('#s-game').show();
-}
+};
 
 //HELPERS
 
 var getPresident = function() {
 	return players[presidentIndex];
-}
+};
 
 var getChancellor = function() {
 	return players[chancellorIndex];
-}
+};
 
 var localPresident = function() {
 	return presidentIndex == localIndex;
-}
+};
 
 var localChancellor = function() {
 	return chancellorIndex == localIndex;
-}
+};
 
 //TURNS
 
@@ -45,7 +43,7 @@ var playTurn = function() {
 	}
 	showCards(null);
 	setDirective(directive);
-}
+};
 
 var advanceTurn = function() {
 	if (gameOver) {
@@ -72,23 +70,23 @@ var advanceTurn = function() {
 	chancellorIndex = null;
 
 	playTurn();
-}
+};
 
 var canVeto = function() {
 	return enactedFascist >= FASCIST_POLICIES_REQUIRED - 1; //(TESTING ? 1 : FASCIST_POLICIES_REQUIRED - 1); //SAMPLE
-}
+};
 
 //VOTES
 
 var updateElectionTracker = function() {
 	$('.tracker-slot').removeClass('selected');
 	$('.tracker-slot').eq(electionTracker).addClass('selected');
-}
+};
 
 var resetElectionTracker = function() {
 	electionTracker = 0;
 	updateElectionTracker();
-}
+};
 
 var advanceElectionTracker = function(forcedPolicy) {
 	if (forcedPolicy) {
@@ -102,7 +100,7 @@ var advanceElectionTracker = function(forcedPolicy) {
 		++electionTracker;
 	}
 	updateElectionTracker();
-}
+};
 
 var failedGovernment = function(forced, explanation) {
 	advanceElectionTracker(forced);
@@ -116,7 +114,7 @@ var failedGovernment = function(forced, explanation) {
 	}
 	setDirective(directive);
 	advanceTurn();
-}
+};
 
 var voteCompleted = function(data) {
 	var directive, cards = null;
@@ -146,4 +144,4 @@ var voteCompleted = function(data) {
 	}
 	setDirective(directive);
 	showCards(cards);
-}
+};

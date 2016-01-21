@@ -21,13 +21,12 @@ var showSignin = function() {
 			$('#guest-login').click();
 		}, 100);
 	}
-}
+};
 
 var initializeLobby = function(data) {
 	Local.name = data.name;
 	Local.email = data.email;
-}
-
+};
 
 var finishSignin = function(response) {
 	$('input-signin').blur();
@@ -38,7 +37,7 @@ var finishSignin = function(response) {
 	auth = response.auth_key;
 	localStorage.setItem('uid', uid);
 	localStorage.setItem('auth', auth);
-}
+};
 
 //GUEST
 
@@ -68,7 +67,7 @@ var signinEmail = function(email) {
 			$('#i-signin-email').focus();
 		}
 	});
-}
+};
 
 //PASSKEY
 
@@ -88,7 +87,7 @@ var signinPasskey = function(passkey) {
 	} else {
 		console.log('Invalid: ' + passkey);
 	}
-}
+};
 
 //REGISTER
 
@@ -109,7 +108,7 @@ var signinRegister = function(username) {
 	} else {
 		console.log('Invalid: ' + username);
 	}
-}
+};
 
 //EVENTS
 

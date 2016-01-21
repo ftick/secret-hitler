@@ -1,6 +1,6 @@
 var rng = function(generator) {
 	return generator.int32();
-}
+};
 
 module.exports = {
 
@@ -39,4 +39,4 @@ module.exports = {
 		return result;
 	},
 
-}
+};

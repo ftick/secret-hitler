@@ -1,6 +1,3 @@
-
-//PUBLIC
-
 var updateLobby = function(data) {
 	if (data.started) {
 		startGame(data);
@@ -14,7 +11,7 @@ var updateLobby = function(data) {
 		nameList += '<div class="player-slot '+floatClass+'"><h2>' + player.name + '</h2></div>';
 	});
 	$('#lobby-players').html(nameList);
-}
+};
 
 var showLobby = function() {
 	gameOver = true;
@@ -24,19 +21,18 @@ var showLobby = function() {
 	$('#s-game').hide();
 
 	socket.emit('join room');
-}
+};
+
+var quitGame = function() {
+	emitAction('quit');
+};
 
 //EVENTS
 
 socket.on('lobby game', updateLobby);
 
-var quitGame = function() {
-	emitAction('quit');
-}
-
 window.onbeforeunload = function() {
 	if (!TESTING && !gameOver) {
-		return "You WILL NOT be removed from the game. If you'd like to leave permanently, please quit from the menu first so your fellow players know you will not return. Thank you!"
+		return "You WILL NOT be removed from the game. If you'd like to leave permanently, please quit from the menu first so your fellow players know you will not return. Thank you!";
 	}
-}
-
+};

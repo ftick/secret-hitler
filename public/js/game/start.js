@@ -11,7 +11,7 @@ var endGame = function(liberalWin, winMethod) {
 	gameOver = true;
 	setDirective('GAME OVER');
 	showOverlay('victory', {liberals: liberalWin, method: winMethod});
-}
+};
 
 var startGame = function(data) {
 	showGame();
@@ -124,4 +124,4 @@ var startGame = function(data) {
 		playTurn();
 		showCards('role');
 	}
-}
+};

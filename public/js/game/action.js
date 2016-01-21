@@ -4,7 +4,7 @@ var emitAction = function(action, data) {
 	}
 	data.action = action;
 	socket.emit('game action', data);
-}
+};
 
 var processAction = function(data, fastForward) {
 	console.log(data);
@@ -36,7 +36,7 @@ var processAction = function(data, fastForward) {
 				if (localPresident()) {
 					displayAvatar(target, data.secret.party);
 				}
-				addChatMessage({msg: 'investigated ' + target.name, uid: presidentElect})
+				addChatMessage({msg: 'investigated ' + target.name, uid: presidentElect});
 			} else if (action == 'special election') {
 				specialPresidentIndex = target.index;
 			} else if (action == 'killed') {
@@ -48,6 +48,6 @@ var processAction = function(data, fastForward) {
 	if (data.roles) {
 		revealRoles(data.roles);
 	}
-}
+};
 
 socket.on('game action', processAction);

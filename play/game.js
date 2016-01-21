@@ -43,11 +43,11 @@ var Game = function(size) {
 
 	this.random = function(max) {
 		return Utils.rngInt(this.generator, max);
-	}
+	};
 
 	this.shuffle = function(array) {
 		return Utils.randomize(this.generator, array);
-	}
+	};
 
 	this.shufflePolicyDeck = function() {
 		this.policyDeck = [];
@@ -59,13 +59,13 @@ var Game = function(size) {
 		}
 		this.policyDeck = this.shuffle(this.policyDeck);
 		console.log(this.policyDeck);
-	}
+	};
 
 //POLICIES
 
 	this.peekPolicies = function() {
 		return this.policyDeck.slice(0, 3);
-	}
+	};
 
 	this.getTopPolicies = function(count) {
 		if (!count) {
@@ -76,17 +76,17 @@ var Game = function(size) {
 			this.shufflePolicyDeck();
 		}
 		return policies;
-	}
+	};
 
 	this.getTopPolicy = function() {
 		return this.getTopPolicies(1)[0];
-	}
+	};
 
 //LOBBY
 
 	this.emit = function(name, data) {
 		io.to(this.gid).emit(name, data);
-	}
+	};
 
 	this.emitAction = function(name, data, secret) {
 		data.action = name;
@@ -107,7 +107,7 @@ var Game = function(size) {
 			this.emit('game action', data);
 		}
 		return data;
-	}
+	};
 
 	this.gameData = function(perspectiveUid) {
 		var sendHistory = this.history;
@@ -115,7 +115,7 @@ var Game = function(size) {
 		var showFascists;
 		if (perspectiveUid) {
 			var perspectiveAllegiance = Player.get(perspectiveUid).gameState.allegiance;
-			showFascists = perspectiveAllegiance == 1 || (perspectiveAllegiance == 2 && this.playerCount <= 6)
+			showFascists = perspectiveAllegiance == 1 || (perspectiveAllegiance == 2 && this.playerCount <= 6);
 		}
 		this.players.forEach(function(uid, index) {
 			var player = Player.get(uid);
@@ -140,8 +140,8 @@ var Game = function(size) {
 
 			players: sendPlayers,
 			history: sendHistory,
-		}
-	}
+		};
+	};
 
 	this.start = function(socket) {
 		this.started = true;
@@ -156,7 +156,7 @@ var Game = function(size) {
 		DB.update('games', "id = '"+this.gid+"'", {state: 1, started_at: Utils.now(), start_index: this.startIndex, player_count: this.playerCount, player_ids: playerIdData});
 
 		// Assign Fascists
-		var facistsCount = Math.ceil(this.playerCount / 2) - 1
+		var facistsCount = Math.ceil(this.playerCount / 2) - 1;
 		var fascistIndicies = [2];
 		for (var i = 1; i < this.playerCount; ++i) {
 			fascistIndicies[i] = i < facistsCount ? 1 : 0;
@@ -176,7 +176,7 @@ var Game = function(size) {
 			var player = Player.get(puid);
 			player.emitStart();
 		});
-	}
+	};
 
 	this.getFascistPower = function() {
 		var enacted = this.enactedFascist;
@@ -195,7 +195,7 @@ var Game = function(size) {
 		if (enacted == 4 || enacted == 5) {
 			return 'bullet';
 		}
-	}
+	};
 
 //STATE
 
@@ -222,7 +222,7 @@ var Game = function(size) {
 			this.presidentIndex = this.positionIndex;
 		}
 		this.power = null;
-	}
+	};
 
 	this.failedElection = function() {
 		++this.electionTracker;
@@ -236,14 +236,14 @@ var Game = function(size) {
 		}
 		this.advanceTurn();
 		return forced;
-	}
+	};
 
 	this.finish = function(liberals, method) {
 		console.log('FIN', this.gid);
 		this.finished = true;
 		DB.update('games', "id = '"+this.gid+"'", {state: 2, finished_at: Utils.now(), history: JSON.stringify(this.history), enacted_liberal: this.enactedLiberal, enacted_fascist: this.enactedFascist, liberal_victory: liberals, win_method: method});
 		this.removeSelf();
-	}
+	};
 
 	this.enact = function(policy) {
 		game.electionTracker = 0;
@@ -266,7 +266,7 @@ var Game = function(size) {
 			this.advanceTurn();
 		}
 		return this.power;
-	}
+	};
 
 //PLAYERS
 
@@ -300,14 +300,14 @@ var Game = function(size) {
 		} else {
 			this.emit('lobby game', this.gameData());
 		}
-	}
+	};
 
 	this.kill = function(player) {
 		if (!player.gameState.killed) {
 			player.gameState.killed = true;
 			--this.currentCount;
 		}
-	}
+	};
 
 	this.removeSelf = function() {
 		var gid = this.gid;
@@ -317,7 +317,7 @@ var Game = function(size) {
 		if (!this.finished) {
 			DB.query("DELETE FROM games WHERE id = '"+gid+"'");
 		}
-	}
+	};
 
 	this.disconnect = function(socket) {
 		if (!this.started || this.finished) {
@@ -328,7 +328,7 @@ var Game = function(size) {
 		if (player) {
 			player.disconnected = true;
 		}
-	}
+	};
 
 	this.remove = function(socket) {
 		socket.leave(this.gid);
@@ -345,26 +345,26 @@ var Game = function(size) {
 				return puid != player.uid;
 			});
 			if (this.players.length == 0) {
-				this.removeSelf()
+				this.removeSelf();
 			}
 		}
 		player.game = null;
 		return true;
-	}
+	};
 
 //HELPERS
 
 	this.getPlayer = function(index) {
 		return Player.get(this.players[index]);
-	}
+	};
 
 	this.isFull = function() {
 		return this.players.length >= this.maxSize;
-	}
+	};
 
 	this.isOpen = function() {
 		return !this.started && !this.isFull();
-	}
+	};
 
 	this.activeCount = function() {
 		var count = 0;
@@ -375,17 +375,17 @@ var Game = function(size) {
 			}
 		});
 		return count;
-	}
+	};
 
 	this.canVeto = function() {
 		return this.enactedFascist >= (Utils.TESTING ? 1 : FASCIST_POLICIES_REQUIRED - 1);
-	}
+	};
 
 	return this;
-}
+};
 
 Game.games = function(argument) {
 	return games;
-}
+};
 
 module.exports = Game;

@@ -6,7 +6,7 @@ var chatAction = function(data, player) {
 	data.uid = player.uid;
 	data = player.emitAction('chat', data);
 	return data;
-}
+};
 
 var quitAction = function(data, player, game, socket) {
 	if (!player.gameState.left) {
@@ -28,7 +28,7 @@ var quitAction = function(data, player, game, socket) {
 			return game.emitAction('abandoned', {uid: player.uid, hitler: isHitler, advance: advance});
 		}
 	}
-}
+};
 
 //PLAY
 
@@ -39,7 +39,7 @@ var chancellorAction = function(data, player, game) {
 	}
 	if (data.uid == game.chancellorElect || (game.playerCount > 5 && data.uid == game.presidentElect)) {
 		console.error('Player involved in the last election', data.uid, game.presidentElect, game.chancellorElect);
-		return
+		return;
 	}
 	// console.log('chancellorAction', player.uid, data, player.gameState.index, game.presidentIndex);
 	if (!player.equals(data) && player.isPresident()) {
@@ -48,7 +48,7 @@ var chancellorAction = function(data, player, game) {
 		game.turn.chancellor = data.uid;
 		return chancellorData;
 	}
-}
+};
 
 var voteAction = function(data, player, game) {
 	if (game.turn.voted) {
@@ -100,7 +100,7 @@ var voteAction = function(data, player, game) {
 		voteData = game.emitAction('voted', voteData, secret);
 		return voteData;
 	}
-}
+};
 
 var policyAction = function(data, player, game) {
 	if (player.isPresident()) {
@@ -157,7 +157,7 @@ var policyAction = function(data, player, game) {
 	} else {
 		console.error('Invalid policy action', player.uid, data);
 	}
-}
+};
 
 //POWERS
 
@@ -170,7 +170,7 @@ var playerPower = function(action, uid, player, game) {
 	data = player.emitAction('peeked', data);
 	game.advanceTurn();
 	return data;
-}
+};
 
 var powerAction = function(action, data, player, game) {
 	if (player.isPresident() && game.power == action) {
@@ -211,7 +211,7 @@ var powerAction = function(action, data, player, game) {
 		game.advanceTurn();
 		return data;
 	}
-}
+};
 
 //EXPORT
 
@@ -252,4 +252,4 @@ module.exports = function(socket) {
 		player.emitOthers('typing', {uid: player.uid, on: data.on});
 	});
 
-}
+};

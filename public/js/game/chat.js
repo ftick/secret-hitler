@@ -5,21 +5,21 @@ var inputState;
 var setDirective = function(directive) {
 	$('#s-game').toggleClass('directive', directive != null);
 	$('#directive').html(directive);
-}
+};
 
 var addChatMessage = function(data) {
 	var message = data.msg;
 	var name = getPlayer(data.uid).name;
 	dataDiv(data, '.chat').text(message);
 	$('#overlay-chat').append('<p><strong>' + name + ': </strong>' + message + '</p>');
-}
+};
 
 var setChatState = function(state) {
 	if (inputState !== state) {
 		inputState = state;
 		socket.emit('typing', {on: inputState});
 	}
-}
+};
 
 //EVENTS
 
