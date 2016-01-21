@@ -1,12 +1,13 @@
 var Postgres = require('pg');
 
+var Config = require('./config');
 var Utils = require('./utils');
 
 // SETUP
 
 Postgres.defaults.parseInt8 = true;
 
-var connectURL = process.env.DATABASE_URL || 'postgres://kiko@localhost/secrethitler';
+var connectURL = process.env.DATABASE_URL || Config.LOCAL_DB_URL;
 
 // HELPERS
 
