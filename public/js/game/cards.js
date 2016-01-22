@@ -3,7 +3,7 @@ var hideCards = function(hideName) {
 };
 
 var showCards = function(showName) {
-	$('#player-cards > span').hide();
+	$('#player-cards > *').hide();
 	$('#cards-'+showName).show();
 
 	if (showName == 'vote') {
