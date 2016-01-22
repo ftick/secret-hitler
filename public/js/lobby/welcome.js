@@ -41,7 +41,6 @@ var finishSignin = function(response) {
 //GUEST
 
 $('#guest-login').on('click', function() {
-	console.log('guest-login');
 	socket.emit('guest login', null, finishSignin);
 });
 
@@ -50,7 +49,6 @@ $('#guest-login').on('click', function() {
 var signinEmail = function(email) {
 	$('.sd-signin').hide();
 	socket.emit('signin email', {email: email}, function(response) {
-		console.log('signinEmail', response);
 		submittedEmail = response.email;
 		if (submittedEmail) {
 			$('.signin-email-address').text(submittedEmail);
@@ -72,10 +70,8 @@ var signinEmail = function(email) {
 
 var signinPasskey = function(passkey) {
 	if (passkey.length == 6 && /^[0-9]+$/.test(passkey)) {
-		console.log('validate passkey', passkey, submittedEmail);
 		$('.sd-signin').hide();
 		socket.emit('signin passkey', {email: submittedEmail, pass: passkey}, function(response) {
-			console.log('signinPasskey', response);
 			if (response.error) {
 				$('#signin-confirm').show();
 				$('#i-signin-passkey').focus();
@@ -92,11 +88,9 @@ var signinPasskey = function(passkey) {
 
 var signinRegister = function(username) {
 	var nameLength = username.length;
-	console.log(username);
 	if (nameLength >= 4 && nameLength <= 12 && /^[a-z0-9]+$/i.test(username)) {
 		$('.sd-signin').hide();
 		socket.emit('signin name', {email: submittedEmail, name: username}, function(response) {
-			console.log('signinRegister', response);
 			if (response.error) {
 				$('#signin-register').show();
 				$('#i-signin-name').focus();

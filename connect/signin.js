@@ -64,7 +64,6 @@ module.exports = function(socket, uid, auth) {
 				if (!key) {
 					key = Utils.code();
 					DB.update('users', 'id = '+userData.id, {passcode: key, passcode_time: now}, null, function() {
-						console.log('Set signin key', userData.name, key);
 						Mailer.sendPasskey(userData.name, userData.email, key);
 					});
 				}
@@ -85,7 +84,6 @@ module.exports = function(socket, uid, auth) {
 					callback({error: 'Passkey expired. Please redo the process for a new key and try again.'});
 				} else {
 					DB.update('users', 'id = '+userData.id, {passcode: null}, returnForSignin, function(response) {
-						console.log('Passkey confirmed', response);
 						authenticate(socket, response.id, response.auth_key);
 						callback(response);
 					});

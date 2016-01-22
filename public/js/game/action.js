@@ -7,7 +7,6 @@ var emitAction = function(action, data) {
 };
 
 var processAction = function(data, fastForward) {
-	console.log(data);
 	var action = data.action;
 	if (action == 'abandoned') {
 		abandonedPlayer(data);

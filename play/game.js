@@ -58,7 +58,6 @@ var Game = function(size) {
 			this.policyDeck[i] = i < liberalsRemaining ? LIBERAL : FASCIST;
 		}
 		this.policyDeck = this.shuffle(this.policyDeck);
-		console.log(this.policyDeck);
 	};
 
 //POLICIES
@@ -217,7 +216,6 @@ var Game = function(size) {
 				if (!player.gameState.killed) {
 					break;
 				}
-				console.log('Skipping killed player', this.positionIndex, this.playerCount);
 			}
 			this.presidentIndex = this.positionIndex;
 		}
@@ -260,7 +258,6 @@ var Game = function(size) {
 				return;
 			}
 			this.power = this.getFascistPower();
-			console.log('enact power:', this.power);
 		}
 		if (!this.power) {
 			this.advanceTurn();

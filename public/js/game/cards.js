@@ -45,6 +45,5 @@ $('#cards-policy').on('click', '.card', function() {
 });
 
 $('#cards-veto').on('click', '.card', function() {
-	console.log($(this).data('veto'));
 	emitAction('policy', {veto: $(this).data('veto') == true});
 });
