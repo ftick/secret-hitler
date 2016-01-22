@@ -29,10 +29,9 @@
 	background-color: #393734;
 }
 
-#menu-button {
+.chat-button {
 	position: fixed;
 	bottom: 0;
-	right: 0;
 	width: 44px;
 	height: 44px;
 	z-index: 9002;
@@ -41,6 +40,14 @@
 	text-align: center;
 	cursor: pointer;
 	font-size: 2em;
+
+	background-size: contain;
+	background-position: center;
+}
+
+#menu-button {
+	right: 0;
+	background-image: url(/image/menu.png);
 }
 
 #chat-box input {
@@ -56,12 +63,6 @@
 
 	border: none;
 	color: #F7E2C0;
-}
-
-#menu-button {
-	background-image: url(/image/menu.png);
-	background-size: contain;
-	background-position: center;
 }
 
 /* DIRECTIVE */

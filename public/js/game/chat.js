@@ -40,7 +40,7 @@ socket.on('typing', function(data) {
 	dataDiv(data, '.typing').toggle(data.on);
 });
 
-//MENU
+//CHAT BUTTONS
 
 $('#menu-button').on('click', function() {
 	if ($('#overlay').css('display') == 'none') {
