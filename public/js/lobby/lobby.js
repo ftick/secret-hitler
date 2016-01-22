@@ -24,7 +24,7 @@ var updateLobby = function(data) {
 	clearCountdown();
 
 	var playerCount = data.players.length;
-	var startTime = data.startTime;
+	startTime = data.startTime;
 	if (startTime) {
 		updateCountdown();
 		countdownInterval = setInterval(updateCountdown, 1000);

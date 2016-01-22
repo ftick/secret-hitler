@@ -150,10 +150,11 @@ var Game = function(size) {
 
 		if (this.enoughToStart()) {
 			var startDelay = 30;
+			this.scheduledStart = Utils.now() + startDelay;
+
 			this.autoTimer = setTimeout(function() {
 				game.start();
 			}, startDelay * 1000);
-			this.scheduledStart = Utils.now() + startDelay;
 		}
 	};
 
