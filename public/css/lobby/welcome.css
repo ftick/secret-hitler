@@ -47,3 +47,7 @@
 	margin: auto;
 	max-width: 100%;
 }
+
+#voice-unsupported {
+	margin-bottom: 40px;
+}

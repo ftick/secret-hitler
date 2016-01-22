@@ -20,11 +20,8 @@ var showSignin = function() {
 			$('#guest-login').click();
 		}, 100);
 	}
-};
 
-var initializeLobby = function(data) {
-	Local.name = data.name;
-	Local.email = data.email;
+	$('#voice-unsupported').toggle(window.SimpleWebRTC == null);
 };
 
 var finishSignin = function(response) {
