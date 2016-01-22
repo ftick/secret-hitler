@@ -10,27 +10,6 @@
 	background-color: #393734;
 }
 
-.chat-button {
-	position: fixed;
-	bottom: 0;
-	width: 44px;
-	height: 44px;
-	z-index: 9002;
-	color: white;
-	line-height: 44px;
-	text-align: center;
-	cursor: pointer;
-	font-size: 2em;
-
-	background-size: contain;
-	background-position: center;
-}
-
-#menu-button {
-	right: 0;
-	background-image: url(/image/menu.png);
-}
-
 #chat-box input {
 	display: inline-block;
 	box-sizing: border-box;
@@ -44,4 +23,34 @@
 
 	border: none;
 	color: #F7E2C0;
+}
+
+/* BUTTONS */
+
+.chat-button {
+	position: fixed;
+	bottom: 0;
+	width: 44px;
+	height: 44px;
+	z-index: 9002;
+	color: #fff;
+	line-height: 44px;
+	text-align: center;
+	cursor: pointer;
+	font-size: 2em;
+
+	background-size: contain;
+	background-position: center;
+}
+
+#voice-button {
+	left: 0;
+}
+#voice-button.muted {
+	opacity: 0.5;
+}
+
+#menu-button {
+	right: 0;
+	background-image: url(/image/menu.png);
 }

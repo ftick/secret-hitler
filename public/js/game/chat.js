@@ -1,4 +1,5 @@
 var inputState;
+var webrtc;
 
 //MESSAGES
 
@@ -41,6 +42,39 @@ socket.on('typing', function(data) {
 });
 
 //CHAT BUTTONS
+
+$('#voice-button').on('click', function() {
+	if (!SimpleWebRTC) {
+		alert('Sorry, voice chat is not available through this browser. Please try using Google Chrome instead if you\'d like to play with voice chat.');
+		return;
+	}
+	if (webrtc) {
+		$(this).toggleClass('muted');
+		if ($(this).hasClass('muted')) {
+			webrtc.mute();
+		} else {
+			webrtc.unmute();
+		}
+		return;
+	}
+
+	var voiceChatRequested = window.confirm('Would you like to enable voice chat? This requires you to approve microphone access, which allows you to talk with the other players in your game.\n\nThis feature is in beta, and is only supported in some browsers. Please report any issues you have with it. Thanks!');
+	if (voiceChatRequested) {
+		webrtc = new SimpleWebRTC({
+			// url: '',
+			autoRequestMedia: true,
+			enableDataChannels: false,
+			media: {
+				audio: true,
+				video: false
+			},
+			nick: username,
+		});
+		webrtc.on('readyToCall', function() {
+			webrtc.joinRoom('s-h-'+gameId);
+		});
+	}
+});
 
 $('#menu-button').on('click', function() {
 	if ($('#overlay').css('display') == 'none') {

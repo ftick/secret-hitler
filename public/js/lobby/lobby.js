@@ -15,6 +15,10 @@ var updateLobby = function(data) {
 
 var showLobby = function() {
 	gameOver = true;
+	if (webrtc) {
+		webrtc.disconnect();
+		webrtc = null;
+	}
 
 	showAppSection('lobby');
 

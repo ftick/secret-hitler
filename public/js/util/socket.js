@@ -1,5 +1,6 @@
 var uid = localStorage.getItem('uid');
 var auth = localStorage.getItem('auth');
+var username;
 
 var params;
 if (uid && auth) {
@@ -15,6 +16,8 @@ socket.on('connect', function(data) {
 });
 
 socket.on('auth', function(data) {
+	name = data.name;
+
 	if (data.invalid) {
 		showSignin();
 	} else {
