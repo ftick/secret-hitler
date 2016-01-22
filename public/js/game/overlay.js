@@ -32,9 +32,9 @@ var showOverlay = function(type, data) {
 		if (localPlayer.allegiance == 0) {
 			inner += 'work together with the other Liberals and pass 5 Liberal policies, or assassinate Hitler with one of the Fascist bullet policies.';
 		} else if (localPlayer.allegiance == 1) {
-			inner += 'work together with the other Fascists to enact 6 Fascist policies, or elect Hitler as Chancellor after 3 Fascist policies have been enacted.';
+			inner += 'work together with the other Fascists to enact 6 Fascist policies, or elect Hitler as Chancellor <strong>after the third</strong> Fascist policy has been enacted.';
 		} else {
-			inner += 'discover the other Fascists to enact 6 Fascist policies, or elect Hitler as Chancellor after 3 Fascist policies have been enacted. As Hitler, you\'ll want to keep yourself out of suspicion to avoid being assassinated.';
+			inner += 'discover the other Fascists, working together to enact 6 Fascist policies, or get yourself elected Chancellor <strong>after the third</strong> Fascist policy has been enacted.<br>As Hitler, you\'ll want to keep yourself out of suspicion to avoid being assassinated.';
 		}
 		inner += '</p><h3>Good luck!</h3>';
 
