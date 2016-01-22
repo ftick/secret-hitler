@@ -28,7 +28,7 @@ $('#i-chat').on('input', function(event) {
 });
 
 $('#i-chat').on('keydown', function(event) {
-    var key = event.which || event.keyCode || event.charCode;
+	var key = event.which || event.keyCode || event.charCode;
 	if (key == 13 && this.value.length > 1) {
 		emitAction('chat', {msg: this.value});
 		this.value = '';

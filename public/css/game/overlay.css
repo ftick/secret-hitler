@@ -76,7 +76,7 @@
 	-webkit-filter: blur(25px);
 	filter: blur(25px);
 /* 	filter: blur(20px); */
-    -webkit-transition: 0.4s all linear;
+	-webkit-transition: 0.4s all linear;
 }
 
 .avatar {

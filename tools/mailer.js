@@ -5,7 +5,7 @@ module.exports = {
 
 	sendPasskey: function(name, email, passcode) {
 		var appName = 'Secret Hitler Online';
-		var passcodeMail =  new SendGrid.Email({
+		var passcodeMail = new SendGrid.Email({
 			to: email,
 			from: 'hello@secrethitler.online',
 			subject: passcode,
