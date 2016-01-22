@@ -1,3 +1,9 @@
+#s-game {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
 #game-mat {
 	position: relative;
 	box-sizing: border-box;

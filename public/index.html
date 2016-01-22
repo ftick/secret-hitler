@@ -8,7 +8,7 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 
 	<link href="css/main.css" rel="stylesheet" type="text/css"/>
-	<link href="css/lobby/signin.css" rel="stylesheet" type="text/css"/>
+	<link href="css/lobby/welcome.css" rel="stylesheet" type="text/css"/>
 	<link href="css/lobby/lobby.css" rel="stylesheet" type="text/css"/>
 	<link href="css/game/game.css" rel="stylesheet" type="text/css"/>
 	<link href="css/game/overlay.css" rel="stylesheet" type="text/css"/>
@@ -19,27 +19,63 @@
 
 <body>
 
-<section id="s-signin" style="display: none;">
-	<h1>Secret&nbsp;Hitler Online</h1>
-	<div id="signin-start" class="sd-signin">
-		<button id="guest-login" class="large">Login as Guest</button>
-		<h3>or enter your email to begin</h3>
-		<input class="full input-signin" id="i-signin-email" type="email" placeholder="example@email.com" /> <div class="input-error mini"></div>
-	</div>
-	<div id="signin-confirm" class="sd-signin">
-		<h2>Welcome back, <span class="signin-email-address">a@a.a</span>!</h2>
-		<h3 class="faint">Wrong email? <button class="signin-restart">try again</button></h3>
+<section id="s-welcome" style="display:none;">
+	<div id="welcome-splash">
+		<div class="section">
+			<h1>Can you find and stop the...</h1>
+		</div>
+		<img class="wordmark" src="image/wordmark.png" alt="Secret Hitler">
+		<div class="section">
+			<h2>A board game set in pre-WWII Germany, where players work with &amp; against eachother as Hitler attempts to come in to power.</h2>
+			<h3>Now adapted for online play.</h3>
+		</div>
 
-		<input class="full input-signin" id="i-signin-passkey" type="numeric" placeholder="6-digit passkey" maxlength="6" autocomplete="none" /> <div class="input-error mini"></div>
-		<h3>Your passcode has been emailed to you. Please enter it to complete your sign in.</h3>
-	</div>
-	<div id="signin-register" class="sd-signin">
-		<h2>Welcome, <span class="signin-email-address">a@a.a</span>!</h2>
-		<h3 class="faint">Wrong email? <button class="signin-restart">try again</button></h3>
+		<div class="section">
+			<h1>Rules</h1>
+			Please familiarize yourself with the rules before playing. The best way to learn is to watch a game played by the creators themselves:
+			<h2><a href="https://www.youtube.com/watch?v=xv8o3Rpovr0" target="_blank">YouTube video</a></h2>
 
-		<input class="full input-signin" id="i-signin-name" type="ascii" placeholder="username" maxlength="12" /> <div class="input-error mini"></div>
-		<h3 class="faint">Provide 3 - 12 letters, numbers, and underscores</h3>
-		<h3 class="faint">Prefer your Twitch chat name if possible</h3>
+			Alternatively, you can read the rules, if that's more your thing:
+			<h2><a href="https://dl.dropboxusercontent.com/u/502769/Secret_Hitler_Rules.pdf" target="_blank">Rulebook</a></h2>
+		</div>
+
+		<div class="section">
+			<h1>About</h1>
+			<h3><a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">Secret Hitler</a> by Max Temkin, Mike Boxleiter, Tommy Maranges, and Mackenzie Schubert</h3>
+			<h3>Licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">Creative Commons BY-NC 4.0</a></h3>
+			<h3>Online version is <a href="https://github.com/kylecoburn/secret-hitler" target="_blank">open source on GitHub</a></h3>
+		</div>
+
+		<hr>
+
+		<div class="section">
+			<h1>Ready to play?</h1>
+			<button id="start-playing" class="large">Let's Go!</button>
+		</div>
+	</div>
+
+	<div id="welcome-signin" style="display: none;">
+		<h1>Secret&nbsp;Hitler Online</h1>
+		<div id="signin-start" class="sd-signin">
+			<button id="guest-login" class="large">Login as Guest</button>
+			<h3>or enter your email to begin</h3>
+			<input class="full input-signin" id="i-signin-email" type="email" placeholder="example@email.com" /> <div class="input-error mini"></div>
+		</div>
+		<div id="signin-confirm" class="sd-signin">
+			<h2>Welcome back, <span class="signin-email-address">a@a.a</span>!</h2>
+			<h3 class="faint">Wrong email? <button class="signin-restart">try again</button></h3>
+
+			<input class="full input-signin" id="i-signin-passkey" type="numeric" placeholder="6-digit passkey" maxlength="6" autocomplete="none" /> <div class="input-error mini"></div>
+			<h3>Your passcode has been emailed to you. Please enter it to complete your sign in.</h3>
+		</div>
+		<div id="signin-register" class="sd-signin">
+			<h2>Welcome, <span class="signin-email-address">a@a.a</span>!</h2>
+			<h3 class="faint">Wrong email? <button class="signin-restart">try again</button></h3>
+
+			<input class="full input-signin" id="i-signin-name" type="ascii" placeholder="username" maxlength="12" /> <div class="input-error mini"></div>
+			<h3 class="faint">Provide 3 - 12 letters, numbers, and underscores</h3>
+			<h3 class="faint">Prefer your Twitch chat name if possible</h3>
+		</div>
 	</div>
 </section>
 
@@ -186,7 +222,9 @@
 	<script src="js/util/util.js"></script>
 	<script src="js/util/socket.js"></script>
 
-	<script src="js/lobby/signin.js"></script>
+	<script src="js/main.js"></script>
+
+	<script src="js/lobby/welcome.js"></script>
 	<script src="js/lobby/lobby.js"></script>
 
 	<script src="js/game/start.js"></script>

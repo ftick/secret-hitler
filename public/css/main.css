@@ -1,11 +1,8 @@
 /* Beige	#F7E2C0 */
 /* Gold		#FFD556 */
 /* GreyD	#383633 */
-
-/* Liberal	#78CAD7 */
-/* LiberalD	#2E6C87 */
-/* Fascist	#E3644F #FD5F4B */
-/* FascistD	#9C0701 #A71310*/
+/* Liberal	#78CAD7 #2E6C87 */
+/* Fascist	#E3644F #9C0701 */
 
 html {
 	width: 100%;
@@ -20,11 +17,16 @@ body {
 	font-family: system-font, -webkit-system-font, 'Helvetica Neue', Helvetica, sans-serif;
 
 	font-weight: 300;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	user-select: none;
-
 	color: #393734;
+}
+
+a {
+	color: #9C0701;
+	text-decoration: none;
+}
+a:hover {
+	color: #E3644F;
+	text-decoration: underline;
 }
 
 button.large {

@@ -6,9 +6,7 @@ var showSignin = function() {
 	localStorage.removeItem('uid');
 	localStorage.removeItem('auth');
 
-	$('#s-signin').show();
-	$('#s-lobby').hide();
-	$('#s-game').hide();
+	showAppSection('welcome');
 
 	$('#signin-start').show();
 	$('#signin-confirm').hide();
@@ -16,8 +14,9 @@ var showSignin = function() {
 
 	$('#i-signin-email').focus();
 
-	if (TESTING) {
+	if (TESTING && localStorage.getItem('manual') == null) {
 		setTimeout(function() {
+			$('#start-playing').click();
 			$('#guest-login').click();
 		}, 100);
 	}
@@ -111,6 +110,11 @@ var signinRegister = function(username) {
 };
 
 //EVENTS
+
+$('#start-playing').on('click', function() {
+	$('#welcome-splash').hide();
+	$('#welcome-signin').show();
+});
 
 $('.signin-restart').on('click', function() {
 	$('.sd-signin').hide();
