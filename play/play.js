@@ -185,7 +185,7 @@ var powerAction = function(action, data, player, game) {
 				if (target.investigated) {
 					return;
 				}
-				secret = {target: game.presidentElect, party: target.getRole()};
+				secret = {target: game.presidentElect, party: target.getParty()};
 				target.investigated = true;
 				data = game.emitAction('investigated', data, secret);
 			} else if (action == 'election') {
