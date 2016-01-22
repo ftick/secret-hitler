@@ -4,7 +4,7 @@ var SeedRandom = require('seedrandom');
 
 var Player = require.main.require('./play/player');
 
-var MINIMUM_GAME_SIZE = 5;
+var MINIMUM_GAME_SIZE = Utils.TESTING ? 2 : 5;
 
 var LIBERAL = 'liberal';
 var FASCIST = 'fascist';
