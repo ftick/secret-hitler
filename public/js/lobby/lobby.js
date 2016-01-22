@@ -1,10 +1,39 @@
+var countdownInterval, startTime;
+
+var clearCountdown = function() {
+	if (countdownInterval) {
+		clearTimeout(countdownInterval);
+		countdownInterval = null;
+	}
+};
+
+var updateCountdown = function() {
+	var secondsRemaining = startTime - timestamp();
+	if (secondsRemaining < 0) {
+		clearCountdown();
+	} else {
+		$('#lobby-countdown').text('waiting ' + secondsRemaining + ' seconds...');
+	}
+};
+
 var updateLobby = function(data) {
 	if (data.started) {
 		startGame(data);
 		return;
 	}
+	clearCountdown();
 
-	$('#lobby-player-summary').text(data.players.length + ' of ' + data.maxSize + ' players');
+	var playerCount = data.players.length;
+	var startTime = data.startTime;
+	if (startTime) {
+		updateCountdown();
+		countdownInterval = setInterval(updateCountdown, 1000);
+	} else {
+		var playersNeeded = 5 - playerCount;
+		$('#lobby-countdown').text(playersNeeded + ' more...');
+	}
+
+	$('#lobby-player-summary').text(playerCount + ' of ' + data.maxSize);
 	var nameList = '';
 	data.players.forEach(function(player, index) {
 		floatClass = index % 2 == 0 ? 'left' : 'right';

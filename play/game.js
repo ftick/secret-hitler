@@ -4,6 +4,8 @@ var SeedRandom = require('seedrandom');
 
 var Player = require.main.require('./play/player');
 
+var MINIMUM_GAME_SIZE = 5;
+
 var LIBERAL = 'liberal';
 var FASCIST = 'fascist';
 var NONE = 'none';
@@ -136,13 +138,35 @@ var Game = function(size) {
 			started: this.started,
 			maxSize: this.maxSize,
 			startIndex: this.positionIndex,
+			startTime: this.scheduledStart,
 
 			players: sendPlayers,
 			history: sendHistory,
 		};
 	};
 
+	this.resetAutostart = function() {
+		this.cancelAutostart();
+
+		if (this.enoughToStart()) {
+			var startDelay = 30;
+			this.autoTimer = setTimeout(function() {
+				game.start();
+			}, startDelay * 1000);
+			this.scheduledStart = Utils.now() + startDelay;
+		}
+	};
+
+	this.cancelAutostart = function() {
+		if (this.autoTimer) {
+			clearTimeout(this.autoTimer);
+			this.autoTimer = null;
+			this.scheduledStart = null;
+		}
+	};
+
 	this.start = function(socket) {
+		this.cancelAutostart();
 		this.started = true;
 		this.playerCount = this.players.length;
 		this.currentCount = this.playerCount;
@@ -244,7 +268,7 @@ var Game = function(size) {
 	};
 
 	this.enact = function(policy) {
-		game.electionTracker = 0;
+		this.electionTracker = 0;
 		if (policy == LIBERAL) {
 			++this.enactedLiberal;
 			if (this.enactedLiberal >= LIBERAL_POLICIES_REQUIRED) {
@@ -288,13 +312,12 @@ var Game = function(size) {
 			this.players[player.gameState.index] = player.uid;
 		}
 
-		if (this.isFull()) {
-			if (this.started) {
-				player.emitStart();
-			} else {
-				this.start();
-			}
+		if (this.started) {
+			player.emitStart();
+		} else if (this.isFull()) {
+			this.start();
 		} else {
+			this.resetAutostart();
 			this.emit('lobby game', this.gameData());
 		}
 	};
@@ -307,6 +330,8 @@ var Game = function(size) {
 	};
 
 	this.removeSelf = function() {
+		this.cancelAutostart();
+
 		var gid = this.gid;
 		games = games.filter(function(g) {
 			return g.gid != gid;
@@ -328,6 +353,10 @@ var Game = function(size) {
 	};
 
 	this.remove = function(socket) {
+		if (!this.started) {
+			this.resetAutostart();
+		}
+
 		socket.leave(this.gid);
 
 		var player = socket.player;
@@ -353,6 +382,10 @@ var Game = function(size) {
 
 	this.getPlayer = function(index) {
 		return Player.get(this.players[index]);
+	};
+
+	this.enoughToStart = function() {
+		return this.players.length >= MINIMUM_GAME_SIZE;
 	};
 
 	this.isFull = function() {
