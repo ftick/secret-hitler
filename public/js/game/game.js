@@ -2,12 +2,6 @@ var LIBERAL = 'liberal';
 var FASCIST = 'fascist';
 var NONE = 'none';
 
-var showGame = function() {
-	$('#s-signin').hide();
-	$('#s-lobby').hide();
-	$('#s-game').show();
-};
-
 //HELPERS
 
 var getPresident = function() {

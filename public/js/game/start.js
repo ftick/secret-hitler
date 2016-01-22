@@ -14,7 +14,7 @@ var endGame = function(liberalWin, winMethod) {
 };
 
 var startGame = function(data) {
-	showGame();
+	showAppSection('game');
 
 	initializedPlay = false;
 	gameOver = false;

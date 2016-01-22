@@ -16,9 +16,7 @@ var updateLobby = function(data) {
 var showLobby = function() {
 	gameOver = true;
 
-	$('#s-signin').hide();
-	$('#s-lobby').show();
-	$('#s-game').hide();
+	showAppSection('lobby');
 
 	socket.emit('join room');
 };
