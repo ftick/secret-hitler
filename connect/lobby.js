@@ -21,7 +21,7 @@ var joinAvailableGame = function(socket) {
 	}
 
 	if (!joiningGame) {
-		joiningGame = new Game(5);
+		joiningGame = new Game(10);
 	}
 	joiningGame.addPlayer(socket, player);
 }
