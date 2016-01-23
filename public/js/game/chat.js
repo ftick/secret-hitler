@@ -44,7 +44,7 @@ socket.on('typing', function(data) {
 //CHAT BUTTONS
 
 $('#voice-button').on('click', function() {
-	if (!SimpleWebRTC) {
+	if (!window.SimpleWebRTC) {
 		alert('Sorry, voice chat is not available through this browser. Please try using Google Chrome instead if you\'d like to play with voice chat.');
 		return;
 	}
