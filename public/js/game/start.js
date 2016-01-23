@@ -1,5 +1,5 @@
 var gameOver = true, initializedPlay;
-var players, playerCount;
+var players, playerCount, currentCount;
 var presidentIndex, positionIndex, specialPresidentIndex, chancellorIndex, presidentPower;
 var presidentElect, chancellorElect;
 var localPlayer, localIndex, localRole;
@@ -24,6 +24,7 @@ var startGame = function(data) {
 	chancellorIndex = null;
 	players = data.players;
 	playerCount = players.length;
+	currentCount = playerCount;
 	chatDisabled = false;
 
 	// Election tracker
