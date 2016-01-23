@@ -4,7 +4,7 @@ var SeedRandom = require('seedrandom');
 
 var Player = require.main.require('./play/player');
 
-var MINIMUM_GAME_SIZE = Utils.TESTING ? 2 : 5;
+var MINIMUM_GAME_SIZE = Utils.TESTING ? 3 : 5;
 
 var LIBERAL = 'liberal';
 var FASCIST = 'fascist';
@@ -149,7 +149,7 @@ var Game = function(size) {
 		this.cancelAutostart();
 
 		if (this.enoughToStart()) {
-			var startDelay = 30;
+			var startDelay = Utils.TESTING ? 6 : 30;
 			this.scheduledStart = Utils.now() + startDelay;
 
 			this.autoTimer = setTimeout(function() {
