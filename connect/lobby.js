@@ -24,7 +24,7 @@ var joinAvailableGame = function(socket) {
 		joiningGame = new Game(10);
 	}
 	joiningGame.addPlayer(socket, player);
-}
+};
 
 module.exports = function(socket) {
 
@@ -32,4 +32,4 @@ module.exports = function(socket) {
 		joinAvailableGame(socket);
 	});
 
-}
+};
