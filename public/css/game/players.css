@@ -48,6 +48,11 @@
 	background-color: #E3644F;
 }
 
+.right .details {
+	display: flex;
+	flex-direction: row-reverse;
+}
+
 /* AVATARS */
 
 .avatar {
