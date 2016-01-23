@@ -216,8 +216,11 @@ var Game = function(size) {
 		if (enacted == 3) {
 			return this.playerCount >= 7 ? 'election' : 'peek';
 		}
-		if (enacted == 4 || enacted == 5) {
-			return 'bullet';
+		if (enacted == 4) {
+			return this.playerCount != 4 ? 'bullet' : null;
+		}
+		if (enacted == 5) {
+			return this.playerCount >= 4 ? 'bullet' : null;
 		}
 	};
 

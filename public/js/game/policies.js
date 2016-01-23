@@ -100,15 +100,23 @@ var policyEnacted = function(data) {
 //POWERS
 
 var getFascistPowers = function() {
-	var fascistPowers = ['', '', '', 'bullet', 'bullet veto', ''];
+	var fascistPowers = ['', '', '', '', '', ''];
 	if (playerCount >= 7) {
-		fascistPowers[2] = 'election';
-		fascistPowers[1] = 'investigate';
 		if (playerCount >= 9) {
 			fascistPowers[0] = 'investigate';
 		}
+		fascistPowers[1] = 'investigate';
+		fascistPowers[2] = 'election';
 	} else {
-		fascistPowers[2] = 'peek'; 
+		fascistPowers[2] = 'peek';
+	}
+	if (playerCount >= 4) {
+		if (playerCount >= 5) {
+			fascistPowers[3] = 'bullet';
+		}
+		fascistPowers[4] = playerCount >= 5 ? 'bullet veto' : 'veto';
+	} else {
+		fascistPowers[3] = 'bullet';
 	}
 // 	fascistPowers[0] = 'bullet'; //SAMPLE
 	return fascistPowers;
