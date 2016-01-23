@@ -39,13 +39,13 @@ var chancellorAction = function(data, player, game) {
 		console.error('Player involved in the last election', data.uid, game.presidentElect, game.chancellorElect);
 		return;
 	}
-	// console.log('chancellorAction', player.uid, data, player.gameState.index, game.presidentIndex);
 	if (!player.equals(data) && player.isPresident()) {
 		var chancellorData = {president: player.uid, chancellor: data.uid};
 		chancellorData = player.emitAction('chancellor chosen', chancellorData);
 		game.turn.chancellor = data.uid;
 		return chancellorData;
 	}
+	console.log('Chancellor invalid', player.uid, data, player.gameState.index, game.presidentIndex);
 };
 
 var voteAction = function(data, player, game) {
