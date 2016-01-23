@@ -48,6 +48,17 @@
 	background-color: #E3644F;
 }
 
+.icon {
+	display: inline-block;
+}
+.typing {
+	font-size: 1.3em;
+}
+.talking {
+	font-size: 1.7em;
+	line-height: 0;
+}
+
 .right .details {
 	display: flex;
 	flex-direction: row-reverse;

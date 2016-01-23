@@ -63,15 +63,21 @@ $('#voice-button').on('click', function() {
 		webrtc = new SimpleWebRTC({
 			// url: '',
 			autoRequestMedia: true,
-			enableDataChannels: false,
+			enableDataChannels: true,
+			detectSpeakingEvents: true,
 			media: {
 				audio: true,
 				video: false
 			},
-			nick: username,
+			nick: uid,
 		});
+
 		webrtc.on('readyToCall', function() {
 			webrtc.joinRoom('s-h-'+gameId);
+		});
+
+		webrtc.on('remoteVolumeChange', function(peer, volume) {
+			uidDiv(peer.nick, '.talking').toggle(volume > -50);
 		});
 	}
 });

@@ -95,7 +95,7 @@ var startGame = function(data) {
 			localIndex = pidx;
 			floatClass += ' local';
 		}
-		playerString += '<div id="ps'+player.uid+'" class="player-slot '+floatClass+'" data-uid="'+player.uid+'"><span class="avatar image"><div class="vote" style="display:none;"></div></span><div class="contents"><div class="details"><h2>'+player.name+' ['+(pidx+1)+']</h2><span class="typing icon" style="display:none;">💬</span></div><div class="chat"></div></div></div>';
+		playerString += '<div id="ps'+player.uid+'" class="player-slot '+floatClass+'" data-uid="'+player.uid+'"><span class="avatar image"><div class="vote" style="display:none;"></div></span><div class="contents"><div class="details"><h2>'+player.name+' ['+(pidx+1)+']</h2><span class="typing icon" style="display:none;">💬</span><span class="talking icon" style="display:none;">🎙</span></div><div class="chat"></div></div></div>';
 		++floatIndex;
 	});
 	playerString += '</div>';
