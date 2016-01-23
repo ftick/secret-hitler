@@ -215,27 +215,34 @@ var powerAction = function(action, data, player, game) {
 
 module.exports = function(socket) {
 
-	socket.on('game action', function(data) {
-		var action = data.action;
+	socket.on('game action', function(rawData) {
+		var action = rawData.action;
 		var player = socket.player;
 		if (!player) {
 			console.error('Socket invalid player', socket.uid, action);
 			return;
 		}
+		var data = {action: action};
 		var game = player.game;
 
 		var recording;
 		if (action == 'quit') {
 			recording = quitAction(data, player, game, socket);
 		} else if (action == 'chat') {
+			data.msg = rawData.msg;
 			recording = chatAction(data, player);
 		} else if (action == 'chancellor') {
+			data.uid = rawData.uid;
 			recording = chancellorAction(data, player, game);
 		} else if (action == 'vote') {
+			data.up = rawData.up;
 			recording = voteAction(data, player, game);
 		} else if (action == 'policy') {
+			data.veto = rawData.veto;
+			data.policyIndex = rawData.policyIndex;
 			recording = policyAction(data, player, game);
 		} else {
+			data.uid = rawData.uid;
 			recording = powerAction(action, data, player, game);
 		}
 		if (recording) {
