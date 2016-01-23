@@ -40,22 +40,36 @@ var showOverlay = function(type, data) {
 
 	// Game over
 	} else if (type == 'victory') {
-		var winName = data.liberals ? 'Liberal' : 'Fascist';
-		inner += '<h1>'+winName+'s win!</h1>';
-		inner += '<h3>';
-		if (data.method == 'policies') {
-			var winCount = data.liberals ? enactedLiberal : enactedFascist;
-			inner += winName+' enacted '+winCount+' '+winName+' policies';
-		} else if (data.method == 'hitler') {
-			if (data.liberals) {
-				inner += 'The Liberals successfully found and killed Hitler';
-			} else {
-				inner += 'The Fascists elected Hitler as Chancellor after the '+enactedFascist+' policy';
+		var liberalVictory = data.liberals;
+		if (liberalVictory === null) {
+			inner += '<h1>Game Abandoned</h1>';
+			inner += '<h3>Sorry, too many players quit the game to continue :(</h3>';
+		} else {
+			var winName = liberalVictory ? 'Liberal' : 'Fascist';
+			inner += '<h1>'+winName+'s win!</h1>';
+			inner += '<h3>';
+			if (data.method == 'policies') {
+				var winCount = liberalVictory ? enactedLiberal : enactedFascist;
+				inner += winName+' enacted '+winCount+' '+winName+' policies';
+			} else if (data.method == 'hitler') {
+				if (liberalVictory) {
+					inner += 'The Liberals successfully found and killed Hitler';
+				} else {
+					inner += 'The Fascists elected Hitler as Chancellor after the '+enactedFascist+' policy';
+				}
+			} else if (data.method == 'hitler quit') {
+				inner += 'The Liberals successfully scared Hitler out of his Thumb Bunker (quit the game)';
+			} else if (playerCount <= 3) {
+				if (data.method == 'killed') {
+					inner += 'Hitler successfully killed one of the two Liberal players';
+				} else if (data.method == 'quit') {
+					inner += 'A Liberal quit the game, leaving too few players remaining :(';
+				}
+				inner += '</h3><h3>';
+				inner += '(special win condition for 3 player)';
 			}
-		} else if (data.method == 'hitler quit') {
-			inner += 'The Liberals successfully scared Hitler out of his Thumb Bunker (quit the game)';
+			inner += '</h3>';
 		}
-		inner += '</h3>';
 	}
 
 	inner += '<button id="overlay-continue" class="large" data-type="'+type+'">continue</button>';

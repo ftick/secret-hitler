@@ -39,7 +39,7 @@ var processAction = function(data, fastForward) {
 			} else if (action == 'special election') {
 				specialPresidentIndex = target.index;
 			} else if (action == 'killed') {
-				killPlayer(target, data.hitler);
+				killPlayer(target, data.hitler, false);
 			}
 		}
 		completePower();

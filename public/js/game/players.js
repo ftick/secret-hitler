@@ -86,17 +86,27 @@ var enablePlayerSelection = function(purpose) {
 };
 
 var killPlayer = function(player, hitler, quit) {
-	$('.player-slot').removeClass('choose');
-	player.killed = true;
-	playerDiv(player).addClass('killed');
-	if (hitler) {
-		endGame(true, quit ? 'hitler quit' : 'hitler');
+	if (!player.killed) {
+		player.killed = true;
+		$('.player-slot').removeClass('choose');
+		playerDiv(player).addClass('killed');
+		currentCount -= 1;
+	
+		if (hitler) {
+			endGame(true, quit ? 'hitler quit' : 'hitler');
+		} else if (currentCount <= 2) {
+			if (playerCount <= 3) {
+				endGame(false, quit ? 'quit' : 'killed');
+			} else {
+				endGame(null, 'remaining');
+			}
+		}
 	}
 };
 
 var abandonedPlayer = function(data) {
 	var player = getPlayer(data.uid);
-	killPlayer(player, data.hitler);
+	killPlayer(player, data.hitler, true);
 	addChatMessage({msg: 'left the game', uid: data.uid});
 
 	if (data.advance) {

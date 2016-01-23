@@ -265,10 +265,12 @@ var Game = function(size) {
 	};
 
 	this.finish = function(liberals, method) {
-		console.log('FIN', this.gid);
-		this.finished = true;
-		DB.update('games', "id = '"+this.gid+"'", {state: 2, finished_at: Utils.now(), history: JSON.stringify(this.history), enacted_liberal: this.enactedLiberal, enacted_fascist: this.enactedFascist, liberal_victory: liberals, win_method: method});
-		this.removeSelf();
+		if (!this.finished) {
+			console.log('FIN', this.gid, liberals, method);
+			this.finished = true;
+			DB.update('games', "id = '"+this.gid+"'", {state: 2, finished_at: Utils.now(), history: JSON.stringify(this.history), enacted_liberal: this.enactedLiberal, enacted_fascist: this.enactedFascist, liberal_victory: liberals, win_method: method});
+			this.removeSelf();
+		}
 	};
 
 	this.enact = function(policy) {
@@ -326,10 +328,16 @@ var Game = function(size) {
 		}
 	};
 
-	this.kill = function(player) {
+	this.kill = function(player, quitting) {
 		if (!player.gameState.killed) {
 			player.gameState.killed = true;
 			this.currentCount -= 1;
+
+			if (player.isHitler()) {
+				this.finish(true, quitting ? 'hitler quit' : 'hitler');
+			} else if (this.currentCount <= 2) {
+				this.removeSelf();
+			}
 			return true;
 		}
 	};
@@ -370,7 +378,7 @@ var Game = function(size) {
 		}
 		if (this.started) {
 			player.gameState.left = true;
-			player.kill();
+			player.kill(true);
 		} else {
 			this.players = this.players.filter(function(puid) {
 				return puid != player.uid;

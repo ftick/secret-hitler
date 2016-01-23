@@ -55,8 +55,8 @@ var Player = function(socket, uid, name, oldPlayer) {
 		return this.game.isHitler(this.uid);
 	};
 
-	this.kill = function() {
-		return this.game.kill(this);
+	this.kill = function(quitting) {
+		return this.game.kill(this, quitting);
 	};
 
 	return this;
