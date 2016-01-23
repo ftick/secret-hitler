@@ -16,7 +16,7 @@ socket.on('connect', function(data) {
 });
 
 socket.on('auth', function(data) {
-	name = data.name;
+	username = data.name;
 
 	if (data.invalid) {
 		showSignin();
