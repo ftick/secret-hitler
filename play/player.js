@@ -51,6 +51,14 @@ var Player = function(socket, uid, name, oldPlayer) {
 		return this.uid == this.game.turn.chancellor;
 	};
 
+	this.isHitler = function() {
+		return this.game.isHitler(this.uid);
+	};
+
+	this.kill = function() {
+		return this.game.kill(this);
+	};
+
 	return this;
 };
 

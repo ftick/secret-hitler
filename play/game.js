@@ -329,7 +329,8 @@ var Game = function(size) {
 	this.kill = function(player) {
 		if (!player.gameState.killed) {
 			player.gameState.killed = true;
-			--this.currentCount;
+			this.currentCount -= 1;
+			return true;
 		}
 	};
 
@@ -369,7 +370,7 @@ var Game = function(size) {
 		}
 		if (this.started) {
 			player.gameState.left = true;
-			this.kill(player);
+			player.kill();
 		} else {
 			this.players = this.players.filter(function(puid) {
 				return puid != player.uid;
@@ -383,6 +384,10 @@ var Game = function(size) {
 	};
 
 //HELPERS
+
+	this.isHitler = function(uid) {
+		return uid == this.hitlerUid;
+	};
 
 	this.getPlayer = function(index) {
 		return Player.get(this.players[index]);

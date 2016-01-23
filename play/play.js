@@ -14,7 +14,7 @@ var quitAction = function(data, player, game, socket) {
 		var wasChancellor = player.isChancellor();
 		if (game.remove(socket)) {
 			var advance;
-			var isHitler = player.uid == game.hitlerUid;
+			var isHitler = player.isHitler();
 			if (isHitler) {
 				game.finish(true, 'hitler quit');
 			} else if (wasPresident) {
@@ -89,7 +89,7 @@ var voteAction = function(data, player, game) {
 			game.turn.policies = game.getTopPolicies();
 			secret = {target: game.presidentElect, policies: game.turn.policies};
 
-			if (game.enactedFascist >= 3 && game.chancellorElect == game.hitlerUid) {
+			if (game.enactedFascist >= 3 && game.isHitler(game.chancellorElect)) {
 				isHitler = true;
 				game.finish(false, 'hitler');
 			}
@@ -195,12 +195,10 @@ var powerAction = function(action, data, player, game) {
 				game.specialPresident = target.gameState.index;
 				data = game.emitAction('special election', data);
 			} else if (action == 'bullet') {
-				if (target.gameState.killed) {
+				if (!target.kill()) {
 					return;
 				}
-				game.kill(target);
-
-				var isHitler = target.uid == game.hitlerUid;
+				var isHitler = target.isHitler();
 				data.hitler = isHitler;
 				if (isHitler) {
 					game.finish(true, 'hitler');
