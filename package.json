@@ -4,7 +4,7 @@
   "description": "Online implementation of Max Temkin, Tommy Maranges, Mike Boxleiter & Mackenzie Schubert's tabletop game 'Secret Hitler'",
   "main": "server.js",
   "scripts": {},
-  "author": "kyis",
+  "author": "Kyle Coburn",
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.3",
