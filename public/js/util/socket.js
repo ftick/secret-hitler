@@ -7,7 +7,7 @@ if (uid && auth) {
 	params = {query: 'uid=' + uid + '&auth=' + auth};
 }
 
-var socket = io(TESTING ? 'http://localhost:8080' : 'https://secrethitler.online', params);
+var socket = io(TESTING ? 'http://localhost:8004' : 'https://secrethitler.online', params);
 
 socket.on('connect', function(data) {
 	if (!uid || !auth) {

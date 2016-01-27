@@ -7,7 +7,7 @@ var Utils = require.main.require('./tools/utils');
 app.use(express.static('public'));
 require('./connect/io')(http);
 
-http.listen(process.env.PORT || 8080);
+http.listen(process.env.PORT || 8004);
 
 if (Utils.TESTING) {
 	console.log('Secret Hitler TEST SERVER');
