@@ -2,6 +2,8 @@ var Utils = require.main.require('./tools/utils');
 
 var Game = require.main.require('./play/game');
 
+//LOCAL
+
 var joinAvailableGame = function(socket) {
 	var joiningGame;
 	var player = socket.player;
@@ -25,6 +27,8 @@ var joinAvailableGame = function(socket) {
 	}
 	joiningGame.addPlayer(socket, player);
 };
+
+//PUBLIC
 
 module.exports = function(socket) {
 

@@ -206,7 +206,7 @@ var powerAction = function(action, data, player, game) {
 	}
 };
 
-//EXPORT
+//PUBLIC
 
 module.exports = function(socket) {
 

@@ -5,6 +5,8 @@ var Mailer = require.main.require('./tools/mailer');
 var Lobby = require('./lobby');
 var Player = require.main.require('./play/player');
 
+//LOCAL
+
 var authenticate = function(socket, uid, auth) {
 	DB.fetch('name, email', 'users', 'id = $1 AND auth_key = $2', [uid, auth], function(response) {
 		if (response) {
@@ -22,6 +24,8 @@ var authenticate = function(socket, uid, auth) {
 		}
 	});
 };
+
+//PUBLIC
 
 module.exports = function(socket, uid, auth) {
 	if (uid && auth) {

@@ -5,6 +5,8 @@ var DB = require.main.require('./tools/db');
 var Signin = require('./signin');
 var Play = require.main.require('./play/play');
 
+//PUBLIC
+
 module.exports = function(http) {
 
 	DB.update('users', 'online_count > 0', {online_count: 0});
