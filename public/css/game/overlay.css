@@ -50,7 +50,9 @@
 	height: 640px;
 	max-height: 100%;
 	margin: auto;
-	overflow: auto;
+
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 }
 
 #overlay-menu button {

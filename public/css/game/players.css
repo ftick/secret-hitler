@@ -6,7 +6,8 @@
 	flex-direction: column;
 	justify-content: space-between;
 
-	overflow: scroll;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 }
 
 .player-slot {

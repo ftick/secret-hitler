@@ -1,6 +1,8 @@
 #s-welcome {
 	text-align: center;
-	overflow: auto;
+
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 }
 
 #s-welcome input {

@@ -9,8 +9,10 @@
 	box-sizing: border-box;
 	height: 100%;
 	min-height: 600px;
-	overflow-y: scroll;
 	padding-bottom: 44px;
+
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 }
 
 #s-game.directive #game-mat {
