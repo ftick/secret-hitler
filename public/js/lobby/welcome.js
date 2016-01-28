@@ -21,7 +21,7 @@ var showSignin = function() {
 		}, 100);
 	}
 
-	$('#voice-unsupported').toggle(window.SimpleWebRTC == null);
+	$('#voice-unsupported').toggle(!supportsVoiceChat());
 };
 
 var finishSignin = function(response) {

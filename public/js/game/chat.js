@@ -1,6 +1,10 @@
 var inputState;
 var webrtc;
 
+var supportsVoiceChat = function() {
+	return window.RTCPeerConnection != null || window.mozRTCPeerConnection != null || window.webkitRTCPeerConnection != null;
+};
+
 //MESSAGES
 
 var setDirective = function(directive) {
@@ -44,8 +48,8 @@ socket.on('typing', function(data) {
 //CHAT BUTTONS
 
 $('#voice-button').on('click', function() {
-	if (!window.SimpleWebRTC) {
-		alert('Sorry, voice chat is not available through this browser. Please try using Google Chrome instead if you\'d like to play with voice chat.');
+	if (!supportsVoiceChat()) {
+		alert('Sorry, voice chat is not available through this browser. Please try using another, such as Google Chrome, if you\'d like to play with voice chat.');
 		return;
 	}
 	if (webrtc) {
