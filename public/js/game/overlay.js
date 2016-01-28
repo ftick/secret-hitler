@@ -84,8 +84,8 @@ $('#overlay').on('click', '#overlay-continue', function() {
 
 //MENU
 
-$('#menu-cancel').on('click', function() {
-	hideOverlay();
+$('#menu-bug').on('click', function() {
+	window.open('https://github.com/kylecoburn/secret-hitler/issues', '_blank');
 });
 
 $('#menu-quit').on('click', function() {
@@ -97,4 +97,8 @@ $('#menu-quit').on('click', function() {
 		quitGame();
 		showLobby();
 	}
+});
+
+$('#menu-cancel').on('click', function() {
+	hideOverlay();
 });

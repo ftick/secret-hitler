@@ -58,6 +58,7 @@
 #overlay-menu button {
 	text-transform: uppercase;
 	letter-spacing: 0.1em;
+	margin: 8px 0;
 }
 
 #overlay-chat {
