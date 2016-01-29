@@ -3,6 +3,8 @@ An online implementation of the board game [Secret Hitler](http://secrethitler.c
 
 Play at [secrethitler.online](https://secrethitler.online) (requires 5 players, use guest accounts to test).
 
+Supports 5-10 players, text or voice (beta) chat, and the game's core rule set. Game data is persisted to allow features like stat aggregation, or game replays in future.
+
 # Attribution
 "Secret Hitler" is a game designed by Max Temkin, Mike Boxleiter, Tommy Maranges, and Mackenzie Schubert. This adaptation is neither affiliated nor endorsed by the copyright holders.
 
