@@ -9,7 +9,7 @@ var chatAction = function(data, player) {
 };
 
 var quitAction = function(data, player, game, socket) {
-	if (!player.gameState.left) {
+	if (!player.gameState().left) {
 		var wasPresident = player.isPresident();
 		var wasChancellor = player.isChancellor();
 		var wasHitler = player.isHitler();
@@ -45,7 +45,7 @@ var chancellorAction = function(data, player, game) {
 		game.turn.chancellor = data.uid;
 		return chancellorData;
 	}
-	console.log('Chancellor invalid', player.uid, data, player.gameState.index, game.presidentIndex);
+	console.log('Chancellor invalid', player.uid, data, player.gameState().index, game.presidentIndex);
 };
 
 var voteAction = function(data, player, game) {
@@ -53,15 +53,14 @@ var voteAction = function(data, player, game) {
 		console.error('vote already complete');
 		return;
 	}
-	if (player.gameState.killed) {
+	if (player.gameState().killed) {
 		return;
 	}
-	player.gameState.vote = data.up;
+	player.gameState().vote = data.up;
 	var doneVoting = true;
-	var gamePlayers = game.players;
-	gamePlayers.forEach(function(puid) {
-		var gp = Player.get(puid);
-		if (!gp.gameState.killed && gp.gameState.vote == null) {
+	game.players.forEach(function(puid) {
+		var playerState = game.playerState[puid];
+		if (!playerState.killed && playerState.vote == null) {
 			doneVoting = false;
 		}
 	});
@@ -70,13 +69,13 @@ var voteAction = function(data, player, game) {
 
 		var supporters = [];
 		var supportCount = 0;
-		gamePlayers.forEach(function(puid, idx) {
-			var gp = Player.get(puid);
-			supporters[idx] = gp.gameState.vote;
-			if (gp.gameState.vote) {
+		game.players.forEach(function(puid, idx) {
+			var playerState = game.playerState[puid];
+			supporters[idx] = playerState.vote;
+			if (playerState.vote) {
 				++supportCount;
 			}
-			delete gp.gameState.vote;
+			delete playerState.vote;
 		});
 		var elected = supportCount > Math.floor(game.currentCount / 2);
 		var forced, secret, isHitler;
@@ -190,7 +189,7 @@ var powerAction = function(action, data, player, game) {
 				if (game.turn.chancellor == data.uid) {
 					return;
 				}
-				game.specialPresident = target.gameState.index;
+				game.specialPresident = target.gameState().index;
 				data = game.emitAction('special election', data);
 			} else if (action == 'bullet') {
 				var wasHitler = target.isHitler();

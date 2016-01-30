@@ -19,6 +19,7 @@ var Game = function(size) {
 	this.gid = Utils.uid();
 	this.maxSize = size;
 	this.players = [];
+	this.playerState = {};
 	this.history = [];
 	this.startIndex;
 
@@ -94,8 +95,7 @@ var Game = function(size) {
 		if (this.finished) {
 			var roles = [];
 			this.players.forEach(function(uid, index) {
-				var player = Player.get(uid);
-				roles[index] = player.gameState.allegiance;
+				roles[index] = game.playerState[uid].allegiance;
 			});
 			data.roles = roles;
 		}
@@ -115,7 +115,7 @@ var Game = function(size) {
 		var sendPlayers = [];
 		var showFascists;
 		if (perspectiveUid) {
-			var perspectiveAllegiance = Player.get(perspectiveUid).gameState.allegiance;
+			var perspectiveAllegiance = this.playerState[perspectiveUid].allegiance;
 			showFascists = perspectiveAllegiance == 1 || (perspectiveAllegiance == 2 && this.playerCount <= 6);
 		}
 		this.players.forEach(function(uid, index) {
@@ -126,7 +126,7 @@ var Game = function(size) {
 				index: index,
 			};
 			if (perspectiveUid) {
-				var playerAllegiance = player.gameState.allegiance;
+				var playerAllegiance = game.playerState[uid].allegiance;
 				if (perspectiveUid == uid || (showFascists && playerAllegiance > 0)) {
 					playerData.allegiance = playerAllegiance;
 				}
@@ -187,9 +187,8 @@ var Game = function(size) {
 		}
 		fascistIndicies = this.shuffle(fascistIndicies);
 		this.players.forEach(function(puid, pidx) {
-			var player = Player.get(puid);
 			var allegiance = fascistIndicies[pidx];
-			player.gameState.allegiance = allegiance;
+			game.playerState[puid].allegiance = allegiance;
 			if (allegiance == 2) {
 				game.hitlerUid = puid;
 			}
@@ -240,8 +239,8 @@ var Game = function(size) {
 				if (this.positionIndex >= this.playerCount) {
 					this.positionIndex = 0;
 				}
-				var player = this.getPlayer(this.positionIndex);
-				if (!player.gameState.killed) {
+				var puid = this.players[this.positionIndex];
+				if (!this.playerState[puid].killed) {
 					break;
 				}
 			}
@@ -304,18 +303,10 @@ var Game = function(size) {
 		player.game = this;
 		player.disconnected = false;
 
-		var adding = true;
-		for (var pidx in this.players) {
-			var gp = this.players[pidx];
-			if (gp == player.uid) {
-				adding = false;
-				break;
-			}
-		}
-		if (adding) {
-			player.gameState = {};
-			player.gameState.index = this.players.length;
-			this.players[player.gameState.index] = player.uid;
+		if (!this.playerState[player.uid]) {
+			var index = this.players.length;
+			this.players[index] = player.uid;
+			this.playerState[player.uid] = {index: index};
 		}
 
 		if (this.started) {
@@ -329,8 +320,9 @@ var Game = function(size) {
 	};
 
 	this.kill = function(player, quitting) {
-		if (!player.gameState.killed) {
-			player.gameState.killed = true;
+		var killState = player.gameState();
+		if (!killState.killed) {
+			killState.killed = true;
 			this.currentCount -= 1;
 
 			if (player.isHitler()) {
@@ -373,11 +365,12 @@ var Game = function(size) {
 		socket.leave(this.gid);
 
 		var player = socket.player;
-		if (player.gameState.left) {
+		var playerState = player.gameState();
+		if (playerState.left) {
 			return false;
 		}
 		if (this.started) {
-			player.gameState.left = true;
+			playerState.left = true;
 			player.kill(true);
 		} else {
 			this.players = this.players.filter(function(puid) {

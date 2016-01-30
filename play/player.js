@@ -8,7 +8,6 @@ var Player = function(socket, uid, name, oldPlayer) {
 
 	if (oldPlayer) {
 		this.game = oldPlayer.game;
-		this.gameState = oldPlayer.gameState;
 	}
 
 	allPlayers[uid] = this;
@@ -36,15 +35,15 @@ var Player = function(socket, uid, name, oldPlayer) {
 	};
 
 	this.gamePlayer = function(socket) {
-		return this.game ? this.game.players[this.gameState.index] : null;
+		return this.game ? this.game.players[this.gameState().index] : null;
 	};
 
 	this.getParty = function(socket) {
-		return this.gameState.allegiance == 0 ? 0 : 1;
+		return this.gameState().allegiance == 0 ? 0 : 1;
 	};
 
 	this.isPresident = function() {
-		return this.gameState.index == this.game.presidentIndex;
+		return this.gameState().index == this.game.presidentIndex;
 	};
 
 	this.isChancellor = function() {
@@ -57,6 +56,10 @@ var Player = function(socket, uid, name, oldPlayer) {
 
 	this.kill = function(quitting) {
 		return this.game.kill(this, quitting);
+	};
+
+	this.gameState = function() {
+		return this.game ? this.game.playerState[this.uid] : {};
 	};
 
 	return this;
