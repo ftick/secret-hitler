@@ -121,4 +121,9 @@ module.exports = {
 		});
 	},
 
+	updatePlayers: function(userIds, state) {
+		console.log(state, userIds);
+		query('UPDATE users SET games_'+state+' = games_'+state+' + 1 WHERE id IN ('+userIds.join(',')+')');
+	},
+
 };
