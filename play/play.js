@@ -193,7 +193,7 @@ var powerAction = function(action, data, player, game) {
 				game.specialPresident = target.gameState.index;
 				data = game.emitAction('special election', data);
 			} else if (action == 'bullet') {
-				var wasHitler = target.wasHitler();
+				var wasHitler = target.isHitler();
 				if (!target.kill(false)) {
 					return;
 				}
