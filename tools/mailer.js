@@ -31,6 +31,6 @@ module.exports = {
 				console.error('sendPasskey', err);
 			}
 		});
-	}
+	},
 
 };
