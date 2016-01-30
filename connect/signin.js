@@ -110,7 +110,6 @@ module.exports = function(socket, uid, auth) {
 		}
 
 		var email = data.email;
-		var replace = data.replace;
 		DB.fetch('id, name', 'users', 'name = $1 OR email = $2', [username, email], function(userData) {
 			if (userData) {
 				callback({error: 'This ' + (userData.name == username ? 'username' : 'email') + ' has already been taken. Please try again.'});
@@ -118,15 +117,11 @@ module.exports = function(socket, uid, auth) {
 				var authKey = Utils.uid() + Utils.uid();
 				var userBegin = {name: username, email: email, auth_key: authKey};
 				var insertCallback = function(response) {
+					console.log('Registered', response.id, username, email);
 					authenticate(socket, response.id, response.auth_key);
 					callback(response);
 				};
-				console.log('Registered', userData.id, username, email);
-				if (replace) {
-					DB.update('users', 'id = '+userData.id, userBegin, returnForSignin, insertCallback);
-				} else {
-					DB.insert('users', userBegin, returnForSignin, insertCallback);
-				}
+				DB.insert('users', userBegin, returnForSignin, insertCallback);
 			}
 		});
 	});
