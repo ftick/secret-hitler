@@ -8,14 +8,20 @@ var Utils = require('./utils');
 Postgres.defaults.parseInt8 = true;
 
 var connectURL = process.env.DATABASE_URL || Config.LOCAL_DB_URL;
+var dbConfigured = connectURL != '';
+if (!dbConfigured) {
+	console.log('Database not configured');
+}
 
 // HELPERS
 
 var query = function(statement, params, callback) {
 	Postgres.connect(connectURL, function(err, client, done) {
 		if (!client) {
-			console.error('CLIENT CONNECTION ERROR');
-			console.log(err, client, done);
+			if (dbConfigured) {
+				console.error('CLIENT CONNECTION ERROR');
+				console.log(err, client, done);
+			}
 			done();
 			return;
 		}
@@ -25,7 +31,7 @@ var query = function(statement, params, callback) {
 				if (callback) {
 					callback(result.rows);
 				}
-			} else {
+			} else if (dbConfigured) {
 				console.error('QUERY ERROR');
 				console.log(statement, params);
 				console.log(err);
