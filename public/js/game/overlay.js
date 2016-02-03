@@ -71,7 +71,7 @@ var showOverlay = function(type, data) {
 				inner += '</h3><h3>';
 				inner += '(special win condition for 3 player)';
 			}
-			inner += '</h3>';
+			inner += '</h3><p><hr></p><button class="menu-feedback large">give feedback</button>';
 		}
 	}
 
@@ -87,8 +87,12 @@ $('#overlay').on('click', '#overlay-continue', function() {
 
 //MENU
 
-$('#menu-bug').on('click', function() {
+$('#menu-issues').on('click', function() {
 	window.open('https://github.com/kylecoburn/secret-hitler/issues', '_blank');
+});
+
+$('#overlay').on('click', '.menu-feedback', function() {
+	showOverlaySection('feedback');
 });
 
 $('#menu-about').on('click', function() {
@@ -109,3 +113,32 @@ $('#menu-quit').on('click', function() {
 $('#menu-cancel').on('click', function() {
 	hideOverlay();
 });
+
+//FEEDBACK
+
+$('.menu-back').on('click', function() {
+	showOverlaySection('menu');
+});
+
+$('#feedback-submit').on('click', function() {
+	console.log(this);
+	var type = $('#i-feedback-type').val();
+	if (!type) {
+		alert('Please select a type of feedback to report and try again!');
+		return;
+	}
+	var body = $('#i-feedback-body').val();
+	if (body.length < 6) {
+		alert('Please enter some feedback into the text area!');
+		return;
+	}
+	socket.emit('feedback', {type: type, body: body}, function(response) {
+		if (response) {
+			$('#i-feedback-type').val('default');
+			$('#i-feedback-body').val('');
+			showOverlaySection('menu');
+			alert('Thank you! Your feedback has been recorded.');
+		}
+	});
+});
+

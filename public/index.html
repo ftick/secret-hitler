@@ -199,16 +199,33 @@
 		</div>
 		<div id="overlay-info" class="toggle-section">
 			<div class="extras"></div>
-			<div class="detail"></div>
+			<div class="front detail"></div>
 		</div>
 		<div id="overlay-menu" class="toggle-section front">
 			<p id="version">
 				Secret&nbsp;Hitler Online v0.1β
 			</p>
-			<button id="menu-bug" class="large">feedback / bug report</button>
+			<button id="menu-issues" class="large">issue tracker</button>
+			<button class="menu-feedback large">feedback</button>
+			<button id="menu-about" class="large">about</button>
+			<hr />
 			<button id="menu-quit" class="large">quit</button>
 			<hr />
 			<button id="menu-cancel" class="large">cancel</button>
+		</div>
+		<div id="overlay-feedback" class="toggle-section front">
+			<h2>Send in your feedback</h2>
+			It's much appreciated!
+			<p><button class="menu-back large">cancel</button>
+			<hr></p>
+			<label>Report type: <select id="i-feedback-type">
+				<option selected="true" disabled="true" value="default">Select one</option>
+				<option>Feedback</option>
+				<option>Bug</option>
+				<option>Other</option>
+			</select></label>
+			<textarea class="full" id="i-feedback-body" placeholder="Enter your feedback"></textarea>
+			<button id="feedback-submit" type="submit" class="large">submit</button>
 		</div>
 		<div id="overlay-about" class="toggle-section front">
 			<h4>Game design</h4>

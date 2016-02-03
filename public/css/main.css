@@ -29,15 +29,6 @@ a:hover {
 	text-decoration: underline;
 }
 
-button.large {
-	height: 44px;
-	width: 480px;
-	max-width: 100%;
-
-	font-size: 1.3em;
-	color: #393734;
-}
-
 .clear {
 	clear: both;
 	margin-left: 1px;
@@ -53,10 +44,6 @@ button.large {
 	text-align: right;
 }
 
-input {
-	font-family: inherit;
-}
-
 h1 {
 	font-size: 3em;
 }
@@ -69,4 +56,36 @@ section {
 
 .faint {
 	color: #666;
+}
+
+/* FORMS */
+
+button.large {
+	height: 44px;
+	width: 480px;
+	max-width: 100%;
+	margin: 8px 0;
+
+	font-size: 1.3em;
+	color: #393734;
+}
+
+input {
+	font-family: inherit;
+}
+
+textarea {
+	box-sizing: border-box;
+	display: block;
+
+	width: 420px;
+	height: 128px;
+	max-width: 100%;
+
+	margin: 12px auto;
+	font-size: 1em;
+}
+
+select {
+	font-size: 1em;
 }
