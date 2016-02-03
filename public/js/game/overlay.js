@@ -4,15 +4,18 @@ var hideOverlay = function() {
 	hideCards('role');
 };
 
-var showOverlay = function(type, data) {
-	var showMenu = type == 'menu';
+var showOverlaySection = function(name) {
+	$('#overlay .toggle-section').hide();
+	$('#overlay-' + name).show();
+};
 
+var showOverlay = function(type, data) {
 	setTimeout(function() {
 		$('#game-mat').addClass('overlay');
 	}, 0);
 	$('#overlay').fadeIn();
-	$('#overlay-info').toggle(!showMenu);
-	$('#overlay-menu').toggle(showMenu);
+	var showInfo = type != 'menu' && type != 'feedback';
+	showOverlaySection(showInfo ? 'info' : type);
 
 	var inner = '';
 	var extras = '';
