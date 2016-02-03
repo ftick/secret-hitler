@@ -1,3 +1,4 @@
+var DB = require.main.require('./tools/db');
 var Utils = require.main.require('./tools/utils');
 
 var Game = require.main.require('./play/game');
@@ -34,6 +35,10 @@ module.exports = function(socket) {
 
 	socket.on('join room', function(data, callback) {
 		joinAvailableGame(socket);
+	});
+
+	socket.on('feedback', function(data, callback) {
+		DB.insert('feedback', {username: socket.player.name, report_type: data.type, feedback: data.body}, null, callback);
 	});
 
 };
