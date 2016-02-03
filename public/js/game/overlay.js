@@ -88,6 +88,10 @@ $('#menu-bug').on('click', function() {
 	window.open('https://github.com/kylecoburn/secret-hitler/issues', '_blank');
 });
 
+$('#menu-about').on('click', function() {
+	showOverlaySection('about');
+});
+
 $('#menu-quit').on('click', function() {
 	var confirmed = true;
 	if (!gameOver) {
