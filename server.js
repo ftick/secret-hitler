@@ -4,7 +4,7 @@ var http = require('http').createServer(app);
 
 var Utils = require.main.require('./tools/utils');
 
-var portNumber = process.env.PORT || 8004;
+var portNumber = process.env.PORT || 36001;
 
 app.use(express.static('public'));
 require('./connect/io')(http);
