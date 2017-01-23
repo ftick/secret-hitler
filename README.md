@@ -10,6 +10,7 @@ Supports 5-10 players, text or voice (beta) chat, and the game's core rule set. 
 
 # Installation
 Steps to install are as follows:
+
 1. Upload `install-the-games-dependencies.sh` to your server and run it with a user who has sudo privileges
 2. Upload `install-the-game.sh` to your server, and run it with a user who has sudo privileges
 3. Upload `tools/secret-hitler-game.service` to your server:
