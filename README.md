@@ -8,6 +8,21 @@ Supports 5-10 players, text or voice (beta) chat, and the game's core rule set. 
 # Attribution
 "Secret Hitler" is a game designed by Max Temkin, Mike Boxleiter, Tommy Maranges, and Mackenzie Schubert. This adaptation is neither affiliated nor endorsed by the copyright holders.
 
+# Installation
+Steps to install are as follows:
+1. Upload `install-the-games-dependencies.sh` to your server and run it with a user who has sudo privileges
+2. Upload `install-the-game.sh` to your server, and run it with a user who has sudo privileges
+3. Upload `tools/secret-hitler-game.service` to your server:
+3.1 Move the file to `/lib/systemd/system/`
+3.2 Ensure that it is owned by root, and is executable
+3.3 Ensure that `/var/www/secret-hitler/server.js` is executable
+4. Alter `/etc/postgresql/YOUR-VERSION/main/postgresql.conf` so that postgres runs on `localhost`
+4. Configure the database:
+4.1 `sudo -u postgres psql -c "CREATE USER secrethitler WITH PASSWORD 'your_password';"`
+4.2 `sudo -u postgres psql -c "CREATE DATABASE secrethitler;"`
+4.3 `sudo -u postgres psql -d secrethitler -f /var/www/secret-hitler/schema.sql`
+4.4 `sudo -u postgres psql -d secrethitler -c "GRANT SELECT, INSERT, UPDATE ON feedback, games, users TO secrethitler;"`
+
 It is licensed under [Creative Commons BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) (non-commercial, attribution required).
 
 # Screenshots
