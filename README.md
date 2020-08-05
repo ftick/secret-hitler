@@ -1,3 +1,5 @@
+Issues are disabled for this repo... Broken bash shell files!
+
 # Secret Hitler Online
 An online implementation of the board game [Secret Hitler](http://secrethitler.com), written in node.js and socket.io.
 
